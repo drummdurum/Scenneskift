@@ -10,6 +10,11 @@ const SESSION_SECRET = process.env.SESSION_SECRET || 'teater-hemmelighed-2025';
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const USE_DATABASE = !!process.env.DATABASE_URL;
 
+// Trust proxy - vigtigt for Railway
+if (NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Database setup (hvis DATABASE_URL er sat)
 let pool, initializeDatabase;
 if (USE_DATABASE) {
@@ -26,20 +31,25 @@ const sessionConfig = {
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  proxy: NODE_ENV === 'production', // Trust Railway proxy
   cookie: { 
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dage
     httpOnly: true,
-    secure: NODE_ENV === 'production'
+    secure: NODE_ENV === 'production', // HTTPS only i produktion
+    sameSite: 'lax'
   }
 };
 
 // Hvis vi bruger database, tilføj database session store
 if (USE_DATABASE) {
+  console.log('🗄️  Konfigurerer PostgreSQL session store...');
   const pgSession = require('connect-pg-simple')(session);
   sessionConfig.store = new pgSession({
     pool: pool,
-    createTableIfMissing: true
+    createTableIfMissing: true,
+    tableName: 'session'
   });
+  console.log('✅ Session store konfigureret');
 }
 
 // Middleware
