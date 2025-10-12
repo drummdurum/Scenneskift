@@ -154,14 +154,34 @@ async function migrateProductsFromJSON(client) {
 
     console.log(`📦 Fandt ${produkterJSON.length} produkter i JSON fil`);
     
+    // Hent bruger ID mapping (JSON ID -> Database ID)
+    const brugerMapping = {};
+    const brugere = await client.query('SELECT id, brugernavn FROM brugere');
+    brugere.rows.forEach(b => {
+      // Map baseret på brugernavn
+      if (b.brugernavn === 'admin') brugerMapping[1] = b.id;
+      if (b.brugernavn === 'drumm') brugerMapping[2] = b.id;
+      if (b.brugernavn === 'julie') brugerMapping[3] = b.id;
+    });
+
+    console.log('🔗 Bruger ID mapping:', brugerMapping);
+    
     let produkterOprettet = 0;
     let reservationerOprettet = 0;
 
     for (const produkt of produkterJSON) {
+      // Map ejer bruger ID
+      const ejerBrugerId = brugerMapping[produkt.ejerBrugerId];
+      
+      if (!ejerBrugerId) {
+        console.log(`⏭️  Springer "${produkt.navn}" over - ejer findes ikke (ejerBrugerId: ${produkt.ejerBrugerId})`);
+        continue;
+      }
+
       // Tjek om produktet allerede eksisterer (baseret på navn og ejer)
       const existing = await client.query(
         'SELECT id FROM produkter WHERE navn = $1 AND ejer_bruger_id = $2',
-        [produkt.navn, produkt.ejerBrugerId]
+        [produkt.navn, ejerBrugerId]
       );
 
       if (existing.rows.length > 0) {
@@ -180,7 +200,7 @@ async function migrateProductsFromJSON(client) {
         produkt.beskrivelse,
         produkt.pris,
         produkt.billede,
-        produkt.ejerBrugerId,
+        ejerBrugerId,
         produkt.skjult,
         produkt.kategori?.størrelse,
         produkt.kategori?.æra,
