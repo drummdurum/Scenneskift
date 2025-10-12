@@ -1,0 +1,232 @@
+<%- include('partials/header', { bruger, currentPage: 'browse', title: 'Browse Rekvisitter' }) %>
+
+  <!-- Hero Section -->
+  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/theater-1713816_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="content-container py-20 relative z-20">
+      <div class="text-center"> 
+      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl">🔍 Browse Rekvisitter</h2>
+      <p class="text-2xl text-cream drop-shadow-lg">Udforsk og favoriser rekvisitter fra andre teatre</p>
+    </div> 
+</div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="min-h-screen py-12 bg-cream">
+    <div class="content-container">
+
+      <!-- Performance Period Search -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8 border-2 border-burgundy">
+        <h3 class="text-2xl font-bold text-burgundy mb-4">📅 Vælg din forestillingsperiode</h3>
+        <p class="text-gray-700 mb-4">Angiv din forestillingsperiode for at se ledige rekvisitter</p>
+        
+        <form method="GET" action="/browse" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Fra dato</label>
+            <input type="date" name="fraDato" value="<%= søgFraDato || '' %>" required
+                   class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Til dato</label>
+            <input type="date" name="tilDato" value="<%= søgTilDato || '' %>" required
+                   class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+          </div>
+          <div>
+            <button type="submit" class="w-full bg-burgundy text-white px-6 py-2 rounded-lg hover:bg-red-900 transition font-semibold">
+              🔍 Søg ledige produkter
+            </button>
+          </div>
+        </form>
+
+        <% if (søgFraDato && søgTilDato) { %>
+          <div class="mt-4 p-4 bg-green-50 border-2 border-green-500 rounded-lg">
+            <p class="text-green-800 font-semibold">
+              ✅ Viser ledige produkter fra <%= new Date(søgFraDato).toLocaleDateString('da-DK') %> til <%= new Date(søgTilDato).toLocaleDateString('da-DK') %>
+            </p>
+            <a href="/browse" class="text-burgundy underline hover:text-red-900 mt-2 inline-block">Ryd søgning</a>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-8 border-2 border-gold">
+        <h3 class="text-2xl font-bold text-burgundy mb-4">🎯 Filtre</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Størrelse</label>
+            <select id="filterStørrelse" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+              <option value="">Alle størrelser</option>
+              <option value="Lille">Lille</option>
+              <option value="Mellem">Mellem</option>
+              <option value="Stor">Stor</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Æra/Årti</label>
+            <select id="filterÆra" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+              <option value="">Alle æraer</option>
+              <option value="Antikken">Antikken</option>
+              <option value="Middelalder">Middelalder</option>
+              <option value="Renaissance">Renaissance</option>
+              <option value="1700-tallet">1700-tallet</option>
+              <option value="1800-tallet">1800-tallet</option>
+              <option value="1900-tallet">1900-tallet</option>
+              <option value="1920'erne">1920'erne</option>
+              <option value="1950'erne">1950'erne</option>
+              <option value="1970'erne">1970'erne</option>
+              <option value="1980'erne">1980'erne</option>
+              <option value="Moderne">Moderne</option>
+              <option value="Klassisk">Klassisk</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Type</label>
+            <select id="filterType" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+              <option value="">Alle typer</option>
+              <option value="Møbler">Møbler</option>
+              <option value="Belysning">Belysning</option>
+              <option value="Tekstiler">Tekstiler</option>
+              <option value="Kostume tilbehør">Kostume tilbehør</option>
+              <option value="Elektronik">Elektronik</option>
+              <option value="Våben">Våben</option>
+              <option value="Køkkenudstyr">Køkkenudstyr</option>
+              <option value="Instrumenter">Instrumenter</option>
+              <option value="Dekoration">Dekoration</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Lokation</label>
+            <select id="filterLokation" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
+              <option value="">Alle lokationer</option>
+              <option value="København">København</option>
+              <option value="Aarhus">Aarhus</option>
+              <option value="Odense">Odense</option>
+              <option value="Aalborg">Aalborg</option>
+              <option value="Esbjerg">Esbjerg</option>
+              <option value="Roskilde">Roskilde</option>
+              <option value="Vejle">Vejle</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-4 flex gap-4">
+          <button onclick="applyFilters()" class="bg-burgundy text-cream px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition">
+            Anvend filtre
+          </button>
+          <button onclick="clearFilters()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-400 transition">
+            Ryd filtre
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <% if (produkter.length === 0) { %>
+        <div class="text-center py-12 bg-white rounded-lg shadow-lg">
+          <p class="text-xl text-gray-600">Ingen rekvisitter tilgængelige fra andre teatre.</p>
+        </div>
+      <% } else { %>
+        <div id="produktGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <% produkter.forEach(produkt => { %>
+            <div class="produkt-card bg-white border-2 border-gold rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                 data-størrelse="<%= produkt.kategori?.størrelse || '' %>"
+                 data-æra="<%= produkt.kategori?.æra || '' %>"
+                 data-type="<%= produkt.kategori?.type || '' %>"
+                 data-lokation="<%= produkt.teaterLokation || '' %>">
+              <!-- Product Image -->
+              <div class="h-64 bg-gradient-to-br from-burgundy to-gray-900 flex items-center justify-center border-b-4 border-gold relative overflow-hidden">
+                <span class="text-8xl opacity-30">🎭</span>
+                <% if (produkt.billede && !produkt.billede.includes('placeholder')) { %>
+                  <img src="<%= produkt.billede %>" alt="<%= produkt.navn %>" class="absolute inset-0 w-full h-full object-cover">
+                <% } %>
+                
+                <!-- Tilgængeligheds badge (kun hvis der er søgt) -->
+                <% if (søgFraDato && søgTilDato) { %>
+                  <div class="absolute top-4 left-4 <%= produkt.erLedig ? 'bg-green-500' : 'bg-red-500' %> text-white px-3 py-2 rounded-lg font-bold shadow-lg">
+                    <%= produkt.erLedig ? '🟢 Ledig' : '🔴 Optaget' %>
+                  </div>
+                <% } %>
+                
+                <!-- Favorit knap -->
+                <form action="/favorit/<%= produkt.id %>" method="POST" class="absolute top-4 right-4">
+                  <button type="submit" class="bg-white bg-opacity-90 rounded-full p-3 shadow-lg hover:scale-110 transition">
+                    <% if (favoritter.includes(produkt.id)) { %>
+                      <span class="text-2xl">❤️</span>
+                    <% } else { %>
+                      <span class="text-2xl">🤍</span>
+                    <% } %>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Product Content -->
+              <div class="p-6">
+                <div class="flex items-start justify-between mb-3">
+                  <h3 class="text-2xl font-bold text-burgundy"><%= produkt.navn %></h3>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-2">
+                  🎭 <strong><%= produkt.teaterNavn %></strong>
+                  <% if (produkt.teaterLokation) { %>
+                    <br>📍 <%= produkt.teaterLokation %>
+                  <% } %>
+                </p>
+                
+                <% if (produkt.kategori) { %>
+                  <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="px-2 py-1 bg-gold bg-opacity-20 text-gray-700 text-xs rounded"><%= produkt.kategori.størrelse %></span>
+                    <span class="px-2 py-1 bg-burgundy bg-opacity-20 text-gray-700 text-xs rounded"><%= produkt.kategori.æra %></span>
+                    <span class="px-2 py-1 bg-blue-100 text-gray-700 text-xs rounded"><%= produkt.kategori.type %></span>
+                  </div>
+                <% } %>
+                
+                <p class="text-gray-700 mb-4 leading-relaxed line-clamp-2"><%= produkt.beskrivelse %></p>
+                <p class="text-2xl font-bold text-gold mb-4"><%= produkt.pris %></p>
+                
+                <a href="/produkt/<%= produkt.id %>" class="block w-full bg-burgundy text-cream py-3 px-6 rounded font-bold uppercase tracking-wider text-center hover:bg-opacity-90 transition">
+                  Se Detaljer
+                </a>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </main>
+
+  <script>
+    function applyFilters() {
+      const størrelse = document.getElementById('filterStørrelse').value;
+      const æra = document.getElementById('filterÆra').value;
+      const type = document.getElementById('filterType').value;
+      const lokation = document.getElementById('filterLokation').value;
+      
+      const cards = document.querySelectorAll('.produkt-card');
+      
+      cards.forEach(card => {
+        const matchStørrelse = !størrelse || card.dataset.størrelse === størrelse;
+        const matchÆra = !æra || card.dataset.æra === æra;
+        const matchType = !type || card.dataset.type === type;
+        const matchLokation = !lokation || card.dataset.lokation === lokation;
+        
+        if (matchStørrelse && matchÆra && matchType && matchLokation) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    function clearFilters() {
+      document.getElementById('filterStørrelse').value = '';
+      document.getElementById('filterÆra').value = '';
+      document.getElementById('filterType').value = '';
+      document.getElementById('filterLokation').value = '';
+      
+      document.querySelectorAll('.produkt-card').forEach(card => {
+        card.style.display = 'block';
+      });
+    }
+  </script>
+
+<%- include('partials/footer', { bruger }) %>

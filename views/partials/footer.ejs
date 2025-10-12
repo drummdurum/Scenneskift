@@ -1,0 +1,43 @@
+  <!-- Footer -->
+  <footer class="bg-white border-t-2 border-gray-200">
+    <div class="content-container py-12">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- SceneSkift Section -->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">SceneSkift</h3>
+          <p class="text-gray-600 leading-relaxed">
+            Din platform til leje af sceneudstyr og tekniske løsninger.
+          </p>
+        </div>
+
+        <!-- Links Section -->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Links</h3>
+          <ul class="space-y-2">
+            <li><a href="/produkter" class="text-gray-600 hover:text-burgundy transition">Produkter</a></li>
+            <% if (typeof bruger !== 'undefined' && bruger) { %>
+              <li><a href="<%= bruger.rolle === 'admin' ? '/admin' : '/dashboard' %>" class="text-gray-600 hover:text-burgundy transition">Mine Bookinger</a></li>
+            <% } else { %>
+              <li><a href="/login" class="text-gray-600 hover:text-burgundy transition">Mine Bookinger</a></li>
+            <% } %>
+          </ul>
+        </div>
+
+        <!-- Kontakt Section -->
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Kontakt</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li>Email: <a href="mailto:kontakt@sceneskift.dk" class="hover:text-burgundy transition">kontakt@sceneskift.dk</a></li>
+            <li>Telefon: <a href="tel:+4512345678" class="hover:text-burgundy transition">+45 12 34 56 78</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+        <p class="text-gray-600">&copy; 2025 SceneSkift. Alle rettigheder forbeholdes.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

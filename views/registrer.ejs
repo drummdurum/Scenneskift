@@ -1,0 +1,113 @@
+<%- include('partials/header', { bruger: null, currentPage: 'registrer', title: 'Registrer' }) %>
+
+  <main class="min-h-screen flex items-center justify-center py-12">
+    <div class="content-container">
+      <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md border-4 border-gold mx-auto">
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-bold text-burgundy mb-2">🎭</h1>
+          <h2 class="text-3xl font-bold text-burgundy">Registrer Teater</h2>
+          <p class="text-gray-600 mt-2">Opret en teater-profil</p>
+        </div>
+
+    <% if (fejl) { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= fejl %>
+      </div>
+    <% } %>
+
+    <% if (success) { %>
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <%= success %>
+      </div>
+    <% } %>
+
+    <form action="/registrer" method="POST" class="space-y-6">
+      <div>
+        <label for="teaternavn" class="block text-gray-700 font-semibold mb-2">Teater navn *</label>
+        <input 
+          type="text" 
+          id="teaternavn" 
+          name="teaternavn" 
+          required
+          placeholder="F.eks. Det Kongelige Teater"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <div>
+        <label for="lokation" class="block text-gray-700 font-semibold mb-2">Lokation *</label>
+        <select 
+          id="lokation" 
+          name="lokation" 
+          required
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+          <option value="">Vælg lokation</option>
+          <option value="København">København</option>
+          <option value="Aarhus">Aarhus</option>
+          <option value="Odense">Odense</option>
+          <option value="Aalborg">Aalborg</option>
+          <option value="Esbjerg">Esbjerg</option>
+          <option value="Roskilde">Roskilde</option>
+          <option value="Vejle">Vejle</option>
+          <option value="Andet">Andet</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="navn" class="block text-gray-700 font-semibold mb-2">Kontaktperson *</label>
+        <input 
+          type="text" 
+          id="navn" 
+          name="navn" 
+          required
+          placeholder="Dit fulde navn"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <div>
+        <label for="brugernavn" class="block text-gray-700 font-semibold mb-2">Brugernavn *</label>
+        <input 
+          type="text" 
+          id="brugernavn" 
+          name="brugernavn" 
+          required
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <div>
+        <label for="password" class="block text-gray-700 font-semibold mb-2">Adgangskode *</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required
+          minlength="6"
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <button 
+        type="submit"
+        class="w-full bg-burgundy text-cream py-3 px-6 rounded-lg font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg"
+      >
+        Registrer Teater
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <a href="/login" class="text-burgundy hover:text-gold transition">Har du allerede en konto? Log ind</a>
+    </div>
+
+    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded">
+      <p class="text-sm text-gray-700">
+        <strong>OBS:</strong> Din teater-profil skal godkendes af en administrator, før du kan logge ind og oprette rekvisitter.
+      </p>
+    </div>
+      </div>
+    </div>
+  </main>
+
+<%- include('partials/footer', { bruger: null }) %>

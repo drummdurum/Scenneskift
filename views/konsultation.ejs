@@ -1,0 +1,125 @@
+<%- include('partials/header', { bruger, currentPage: 'konsultation', title: 'Book Konsultation' }) %>
+
+  <!-- Hero Section -->
+  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/theater-551797_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="content-container py-20 relative z-20">
+        <div class="text-center">
+      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl">💼 Book Konsultation</h2>
+      <p class="text-2xl text-cream drop-shadow-lg">Få hjælp til at finde de perfekte rekvisitter til din forestilling</p>
+    </div>
+</div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="min-h-screen py-12 bg-cream">
+    <div class="content-container max-w-4xl">
+
+      <!-- Info Box -->
+      <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 mb-8">
+        <h3 class="text-xl font-bold text-blue-900 mb-2">ℹ️ Hvad kan vi hjælpe med?</h3>
+        <ul class="list-disc list-inside text-blue-800 space-y-2">
+          <li>Find de rigtige rekvisitter til din produktion</li>
+          <li>Få råd om hvilke rekvisitter der passer til din periode/stil</li>
+          <li>Hjælp til at koordinere flere reservationer</li>
+          <li>Specialønsker og tilpasninger</li>
+          <li>Spørgsmål om priser og tilgængelighed</li>
+        </ul>
+      </div>
+
+      <!-- Success/Error Messages -->
+      <% if (success) { %>
+        <div class="bg-green-100 border-2 border-green-400 text-green-700 px-6 py-4 rounded-lg mb-6">
+          <p class="font-bold">✅ <%= success %></p>
+        </div>
+      <% } %>
+
+      <% if (fejl) { %>
+        <div class="bg-red-100 border-2 border-red-400 text-red-700 px-6 py-4 rounded-lg mb-6">
+          <p class="font-bold">❌ <%= fejl %></p>
+        </div>
+      <% } %>
+
+      <!-- Booking Form -->
+      <div class="bg-white rounded-lg shadow-xl p-8 border-4 border-gold">
+        <h3 class="text-3xl font-bold text-burgundy mb-6">📅 Book en tid</h3>
+        
+        <form action="/konsultation" method="POST" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="dato" class="block text-gray-700 font-semibold mb-2">Foretrukken dato *</label>
+              <input 
+                type="date" 
+                id="dato" 
+                name="dato" 
+                required
+                min="<%= new Date().toISOString().split('T')[0] %>"
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+              >
+            </div>
+
+            <div>
+              <label for="tidspunkt" class="block text-gray-700 font-semibold mb-2">Foretrukket tidspunkt *</label>
+              <select 
+                id="tidspunkt" 
+                name="tidspunkt" 
+                required
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+              >
+                <option value="">Vælg tidspunkt</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label for="beskrivelse" class="block text-gray-700 font-semibold mb-2">Beskriv hvad du har brug for hjælp til *</label>
+            <textarea 
+              id="beskrivelse" 
+              name="beskrivelse" 
+              rows="8" 
+              required
+              placeholder="Fortæl os om din forestilling, hvilken periode/stil du søger, hvor mange rekvisitter du har brug for, eller hvad du ellers ønsker hjælp til..."
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition resize-none"
+            ></textarea>
+            <p class="text-sm text-gray-500 mt-2">Tip: Jo mere detaljeret du er, jo bedre kan vi forberede os til at hjælpe dig</p>
+          </div>
+
+          <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+            <p class="text-sm text-gray-700">
+              <strong>📞 Bemærk:</strong> Dette er en anmodning om konsultation. Vi kontakter dig inden for 1-2 hverdage for at bekræfte tidspunktet.
+            </p>
+          </div>
+
+          <button 
+            type="submit"
+            class="w-full bg-burgundy text-cream py-4 px-6 rounded-lg font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg text-lg"
+          >
+            📅 Send anmodning
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="mt-8 bg-white rounded-lg shadow-lg p-6 border-2 border-gold">
+        <h3 class="text-xl font-bold text-burgundy mb-4">📞 Eller kontakt os direkte</h3>
+        <div class="space-y-2 text-gray-700">
+          <p><strong>Email:</strong> konsultation@sceneskift.dk</p>
+          <p><strong>Telefon:</strong> +45 12 34 56 78</p>
+          <p><strong>Åbningstider:</strong> Man-Fre 09:00-17:00</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+<%- include('partials/footer', { bruger }) %>

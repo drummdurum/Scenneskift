@@ -1,0 +1,290 @@
+<%- include('partials/header', { bruger, currentPage: 'produkter', title: produkt.navn }) %>
+  <style>
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+
+  <!-- Hero Section -->
+  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/background-1126047_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="content-container py-20 relative z-20">
+      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl"><%= produkt.navn %></h2>
+      <p class="text-2xl text-cream drop-shadow-lg"><%= produkt.beskrivelse %></p>
+      <p class="text-4xl font-bold text-gold mt-6 drop-shadow-lg"><%= produkt.pris %></p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="min-h-screen py-12 bg-cream">
+    <div class="content-container">
+      <!-- Back Button -->
+      <a href="/produkter" class="inline-block text-burgundy hover:text-gold transition mb-8 text-lg font-semibold cursor-pointer">
+        ← Tilbage til produkter
+      </a>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Product Info -->
+        <div class="bg-white rounded-lg shadow-xl border-4 border-gold overflow-hidden">
+          <!-- Product Image -->
+          <div class="h-96 bg-gradient-to-br from-burgundy to-gray-900 flex items-center justify-center border-b-4 border-gold relative overflow-hidden">
+            <span class="text-9xl opacity-30">🎭</span>
+            <% if (produkt.billede && !produkt.billede.includes('placeholder')) { %>
+              <img src="<%= produkt.billede %>" alt="<%= produkt.navn %>" class="absolute inset-0 w-full h-full object-cover">
+            <% } %>
+          </div>
+
+          <!-- Product Details -->
+          <div class="p-8">
+            <!-- Current Status -->
+            <% 
+              const idag = new Date().toISOString().split('T')[0];
+              const erReserveret = produkt.reservationer && produkt.reservationer.some(res => {
+                return idag >= res.fraDato && idag <= res.tilDato;
+              });
+            %>
+            <div class="p-4 rounded-lg <%= erReserveret ? 'bg-red-100 border border-red-300' : 'bg-green-100 border border-green-300' %> mb-6">
+              <div class="flex items-center">
+                <span class="text-2xl mr-3"><%= erReserveret ? '🔴' : '🟢' %></span>
+                <div>
+                  <p class="font-bold <%= erReserveret ? 'text-red-700' : 'text-green-700' %> text-lg">
+                    <%= erReserveret ? 'Reserveret i dag' : 'Tilgængelig nu' %>
+                  </p>
+                  <p class="text-sm <%= erReserveret ? 'text-red-600' : 'text-green-600' %>">
+                    <%= erReserveret ? 'Dette produkt er udlejet i dag' : 'Produktet kan lejes' %>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reservations List -->
+            <% if (produkt.reservationer && produkt.reservationer.length > 0) { %>
+              <div class="mt-6">
+                <h3 class="text-xl font-bold text-burgundy mb-3">Kommende reservationer:</h3>
+                <div class="space-y-2">
+                  <% produkt.reservationer.forEach(res => { %>
+                    <div class="bg-gray-100 p-3 rounded border-l-4 border-burgundy">
+                      <p class="font-semibold text-gray-800">
+                        <%= new Date(res.fraDato).toLocaleDateString('da-DK') %> - <%= new Date(res.tilDato).toLocaleDateString('da-DK') %>
+                      </p>
+                      <p class="text-sm text-gray-600">Reserveret af: <%= res.teaternavn || res.bruger %></p>
+                    </div>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Calendar & Booking -->
+        <div class="bg-white rounded-lg shadow-xl border-4 border-gold p-8">
+          <h3 class="text-3xl font-bold text-burgundy mb-6">📅 Tilgængelighed & Reservation</h3>
+
+          <% if (fejl) { %>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+              <%= fejl %>
+            </div>
+          <% } %>
+
+          <% if (success) { %>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+              <%= success %>
+            </div>
+          <% } %>
+
+          <!-- Calendar -->
+          <div class="mb-8">
+            <h4 class="text-xl font-bold text-burgundy mb-4">Kalender</h4>
+            <div id="calendar" class="bg-cream p-4 rounded-lg border-2 border-gold">
+              <!-- Calendar will be generated by JavaScript -->
+            </div>
+            <div class="flex items-center justify-center gap-6 mt-4 text-sm">
+              <div class="flex items-center">
+                <span class="w-6 h-6 bg-green-500 rounded mr-2"></span>
+                <span>Ledig</span>
+              </div>
+              <div class="flex items-center">
+                <span class="w-6 h-6 bg-red-500 rounded mr-2"></span>
+                <span>Reserveret</span>
+              </div>
+              <div class="flex items-center">
+                <span class="w-6 h-6 bg-gray-300 rounded mr-2"></span>
+                <span>I dag</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Form -->
+          <% if (bruger) { %>
+            <div class="border-t-2 border-gold pt-6">
+              <h4 class="text-xl font-bold text-burgundy mb-4">Reserver produkt</h4>
+              <form action="/produkt/<%= produkt.id %>/reserver" method="POST" class="space-y-4">
+                <div>
+                  <label for="fraDato" class="block text-gray-700 font-semibold mb-2">Fra dato:</label>
+                  <input 
+                    type="date" 
+                    id="fraDato" 
+                    name="fraDato" 
+                    required
+                    min="<%= new Date().toISOString().split('T')[0] %>"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+                  >
+                </div>
+
+                <div>
+                  <label for="tilDato" class="block text-gray-700 font-semibold mb-2">Til dato:</label>
+                  <input 
+                    type="date" 
+                    id="tilDato" 
+                    name="tilDato" 
+                    required
+                    min="<%= new Date().toISOString().split('T')[0] %>"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+                  >
+                </div>
+
+                <button 
+                  type="submit"
+                  class="w-full bg-burgundy text-cream py-4 px-6 rounded-lg font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg"
+                >
+                  Reserver nu
+                </button>
+              </form>
+            </div>
+          <% } else { %>
+            <div class="border-t-2 border-gold pt-6">
+              <div class="bg-yellow-50 border-2 border-yellow-300 p-6 rounded-lg text-center">
+                <p class="text-lg font-semibold text-gray-800 mb-4">Du skal være logget ind for at reservere</p>
+                <a href="/login" class="inline-block bg-burgundy text-cream px-6 py-3 rounded font-bold uppercase tracking-wider hover:bg-opacity-90 transition">
+                  Log ind nu
+                </a>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Generate calendar
+    let currentDisplayMonth = new Date().getMonth();
+    let currentDisplayYear = new Date().getFullYear();
+
+    function generateCalendar() {
+      const calendar = document.getElementById('calendar');
+      if (!calendar) {
+        console.error('Calendar element not found!');
+        return;
+      }
+      
+      // Get reservations from server
+      const reservationer = <%- JSON.stringify(produkt.reservationer || []) %>;
+      console.log('Generating calendar with reservations:', reservationer);
+      
+      // Create month header with navigation
+      const monthNames = ['Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni', 
+                          'Juli', 'August', 'September', 'Oktober', 'November', 'December'];
+      
+      let html = `
+        <div class="flex items-center justify-between mb-4">
+          <button onclick="previousMonth()" type="button" class="bg-burgundy text-white px-4 py-2 rounded hover:bg-red-900 transition font-bold">
+            ← Forrige
+          </button>
+          <div class="text-center font-bold text-xl text-burgundy">
+            ${monthNames[currentDisplayMonth]} ${currentDisplayYear}
+          </div>
+          <button onclick="nextMonth()" type="button" class="bg-burgundy text-white px-4 py-2 rounded hover:bg-red-900 transition font-bold">
+            Næste →
+          </button>
+        </div>
+      `;
+      
+      // Week day headers
+      html += '<div class="grid grid-cols-7 gap-1 mb-2">';
+      ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'].forEach(day => {
+        html += `<div class="text-center font-semibold text-sm text-gray-700">${day}</div>`;
+      });
+      html += '</div>';
+      
+      // Calculate days
+      const firstDay = new Date(currentDisplayYear, currentDisplayMonth, 1);
+      const lastDay = new Date(currentDisplayYear, currentDisplayMonth + 1, 0);
+      const startingDayOfWeek = (firstDay.getDay() + 6) % 7; // Monday = 0
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      html += '<div class="grid grid-cols-7 gap-1">';
+      
+      // Empty cells before first day
+      for (let i = 0; i < startingDayOfWeek; i++) {
+        html += '<div class="calendar-day"></div>';
+      }
+      
+      // Days of month
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const currentDate = new Date(currentDisplayYear, currentDisplayMonth, day);
+        currentDate.setHours(0, 0, 0, 0);
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const isToday = currentDate.getTime() === today.getTime();
+        
+        // Check if date is reserved
+        let isReserved = false;
+        reservationer.forEach(res => {
+          const from = new Date(res.fraDato);
+          from.setHours(0, 0, 0, 0);
+          const to = new Date(res.tilDato);
+          to.setHours(0, 0, 0, 0);
+          if (currentDate >= from && currentDate <= to) {
+            isReserved = true;
+          }
+        });
+        
+        let bgColor = 'bg-green-500 hover:bg-green-600';
+        if (isReserved) {
+          bgColor = 'bg-red-500 hover:bg-red-600';
+        }
+        if (isToday) {
+          bgColor = 'bg-gray-300 hover:bg-gray-400 ring-2 ring-burgundy';
+        }
+        
+        html += `<div class="calendar-day ${bgColor} text-white rounded cursor-pointer transition text-sm font-semibold">${day}</div>`;
+      }
+      
+      html += '</div>';
+      
+      calendar.innerHTML = html;
+    }
+
+    function previousMonth() {
+      currentDisplayMonth--;
+      if (currentDisplayMonth < 0) {
+        currentDisplayMonth = 11;
+        currentDisplayYear--;
+      }
+      generateCalendar();
+    }
+
+    function nextMonth() {
+      currentDisplayMonth++;
+      if (currentDisplayMonth > 11) {
+        currentDisplayMonth = 0;
+        currentDisplayYear++;
+      }
+      generateCalendar();
+    }
+    
+    // Generate calendar on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', generateCalendar);
+    } else {
+      generateCalendar();
+    }
+  </script>
+
+<%- include('partials/footer', { bruger }) %>

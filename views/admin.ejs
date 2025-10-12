@@ -1,0 +1,168 @@
+<%- include('partials/header', { bruger, currentPage: 'admin', title: 'Admin Panel' }) %>
+
+  <!-- Hero Section -->
+  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/background-1126047_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="content-container py-20 relative z-20">
+      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl">👑 Admin Dashboard</h2>
+      <p class="text-2xl text-cream drop-shadow-lg">Velkommen, <%= bruger.navn %>! Administrer brugere og produkter</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="min-h-screen py-12 bg-cream">
+    <div class="content-container">
+
+      <!-- Statistics -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-lg border-2 border-gold text-center">
+          <div class="text-5xl mb-2">👥</div>
+          <div class="text-3xl font-bold text-burgundy"><%= brugere.length %></div>
+          <div class="text-gray-600">Totale Brugere</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg border-2 border-gold text-center">
+          <div class="text-5xl mb-2">✅</div>
+          <div class="text-3xl font-bold text-green-600"><%= brugere.filter(b => b.aktiv).length %></div>
+          <div class="text-gray-600">Aktive Brugere</div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg border-2 border-gold text-center">
+          <div class="text-5xl mb-2">📦</div>
+          <div class="text-3xl font-bold text-gold"><%= produkter.length %></div>
+          <div class="text-gray-600">Totale Produkter</div>
+        </div>
+      </div>
+
+      <!-- User Management -->
+      <div class="bg-white rounded-lg shadow-xl p-8 border-2 border-gold mb-8">
+        <h3 class="text-3xl font-bold text-burgundy mb-6 flex items-center">
+          <span class="mr-3">👥</span> Brugerstyring
+        </h3>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-burgundy text-cream">
+                <th class="px-4 py-3 text-left">Navn</th>
+                <th class="px-4 py-3 text-left">Teaternavn</th>
+                <th class="px-4 py-3 text-left">Brugernavn</th>
+                <th class="px-4 py-3 text-left">Rolle</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">Handlinger</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% brugere.forEach(b => { %>
+                <tr class="border-b hover:bg-cream transition">
+                  <td class="px-4 py-3 font-semibold"><%= b.navn %></td>
+                  <td class="px-4 py-3"><%= b.teaternavn || '-' %></td>
+                  <td class="px-4 py-3"><%= b.brugernavn %></td>
+                  <td class="px-4 py-3">
+                    <% if (b.rolle === 'admin') { %>
+                      <span class="bg-burgundy text-cream px-3 py-1 rounded-full text-sm font-bold">Admin</span>
+                    <% } else { %>
+                      <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm">Bruger</span>
+                    <% } %>
+                  </td>
+                  <td class="px-4 py-3">
+                    <% if (b.aktiv) { %>
+                      <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">✓ Aktiv</span>
+                    <% } else { %>
+                      <span class="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold">⏳ Afventer</span>
+                    <% } %>
+                  </td>
+                  <td class="px-4 py-3">
+                    <% if (b.rolle !== 'admin') { %>
+                      <% if (!b.aktiv) { %>
+                        <form action="/admin/godkend/<%= b.id %>" method="POST" class="inline">
+                          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition text-sm font-semibold">
+                            Godkend
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <form action="/admin/deaktiver/<%= b.id %>" method="POST" class="inline">
+                          <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition text-sm font-semibold">
+                            Deaktiver
+                          </button>
+                        </form>
+                      <% } %>
+                    <% } else { %>
+                      <span class="text-gray-400 text-sm italic">Admin bruger</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Product Management -->
+      <div class="bg-white rounded-lg shadow-xl p-8 border-2 border-gold">
+        <h3 class="text-3xl font-bold text-burgundy mb-6 flex items-center">
+          <span class="mr-3">📦</span> Produktstyring
+        </h3>
+
+        <!-- Search/Filter Box -->
+        <div class="mb-6 bg-cream p-4 rounded-lg border-2 border-gold">
+          <label for="produktFilter" class="block text-burgundy font-semibold mb-2">🔍 Filtrer efter teaternavn:</label>
+          <input 
+            type="text" 
+            id="produktFilter" 
+            placeholder="Søg efter teater..." 
+            class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none"
+          >
+          <p class="text-sm text-gray-600 mt-2">Viser <span id="produktCount"><%= produkter.length %></span> af <%= produkter.length %> produkter</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="produktGrid">
+          <% produkter.forEach(produkt => { %>
+            <% const ejer = brugere.find(b => b.id === produkt.ejerBrugerId); %>
+            <div class="produkt-card border-2 border-gold rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition" data-teaternavn="<%= ejer?.teaternavn?.toLowerCase() || '' %>">
+              <div class="h-48 bg-gradient-to-br from-burgundy to-gray-900 flex items-center justify-center border-b-4 border-gold">
+                <span class="text-6xl opacity-30">🎭</span>
+              </div>
+              <div class="p-4">
+                <h4 class="text-xl font-bold text-burgundy mb-2"><%= produkt.navn %></h4>
+                <p class="text-sm text-gray-500 mb-2">🏛️ <strong><%= ejer?.teaternavn || 'Ukendt teater' %></strong></p>
+                <p class="text-gray-600 text-sm mb-2"><%= produkt.beskrivelse.substring(0, 80) %>...</p>
+                <p class="text-lg font-bold text-gold mb-3"><%= produkt.pris %></p>
+                <form action="/admin/slet-produkt/<%= produkt.id %>" method="POST" onsubmit="return confirm('Er du sikker på at du vil slette dette produkt?');">
+                  <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition font-semibold">
+                    Slet Produkt
+                  </button>
+                </form>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <script>
+        // Product filter functionality
+        const filterInput = document.getElementById('produktFilter');
+        const produktCards = document.querySelectorAll('.produkt-card');
+        const produktCount = document.getElementById('produktCount');
+
+        filterInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase();
+          let visibleCount = 0;
+
+          produktCards.forEach(card => {
+            const teaternavn = card.getAttribute('data-teaternavn');
+            if (teaternavn.includes(searchTerm)) {
+              card.style.display = 'block';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          produktCount.textContent = visibleCount;
+        });
+      </script>
+    </div>
+  </main>
+
+<%- include('partials/footer', { bruger }) %>

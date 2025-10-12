@@ -1,0 +1,134 @@
+<%- include('partials/header', { bruger, currentPage: 'perioder', title: 'Forestillingsperioder' }) %>
+
+  <!-- Hero Section -->
+  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/theater-1328407_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+    <!-- Dark overlay for better text readability -->
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    
+    <div class="content-container py-20 relative z-20">
+      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl">🎭 Forestillingsperioder</h2>
+      <p class="text-2xl text-cream drop-shadow-lg">Registrer dine forestillinger og hold styr på din kalender</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="min-h-screen py-12 bg-cream">
+    <div class="content-container max-w-4xl">
+
+      <!-- Info Box -->
+      <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 mb-8">
+        <h3 class="text-xl font-bold text-blue-900 mb-2">ℹ️ Sådan virker det:</h3>
+        <ul class="list-disc list-inside text-blue-800 space-y-2">
+          <li>Registrer din forestillingsperiode nedenfor</li>
+          <li>Når andre teatre søger i Browse med en periode, vil de se hvilke rekvisitter der er ledige</li>
+          <li>Dine rekvisitter vises som bookeet for andre i de perioder, du har registreret her</li>
+          <li>Du styrer selv synligheden af dine produkter via Dashboard (Vis/Skjul)</li>
+          <li>Dette hjælper andre teatre med at finde ledige rekvisitter til deres egen forestilling</li>
+        </ul>
+      </div>
+
+      <!-- Opret Forestillingsperiode -->
+      <div class="bg-white rounded-lg shadow-xl p-8 border-4 border-gold mb-8">
+        <h3 class="text-3xl font-bold text-burgundy mb-6">➕ Tilføj Forestillingsperiode</h3>
+        
+        <form action="/forestillingsperioder" method="POST" class="space-y-6">
+          <div>
+            <label for="titel" class="block text-gray-700 font-semibold mb-2">Forestillingens titel *</label>
+            <input 
+              type="text" 
+              id="titel" 
+              name="titel" 
+              required
+              placeholder="F.eks. Hamlet, Juleshow 2025"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+            >
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="fraDato" class="block text-gray-700 font-semibold mb-2">Start dato *</label>
+              <input 
+                type="date" 
+                id="fraDato" 
+                name="fraDato" 
+                required
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+              >
+            </div>
+
+            <div>
+              <label for="tilDato" class="block text-gray-700 font-semibold mb-2">Slut dato *</label>
+              <input 
+                type="date" 
+                id="tilDato" 
+                name="tilDato" 
+                required
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+              >
+            </div>
+          </div>
+
+          <button 
+            type="submit"
+            class="w-full bg-burgundy text-cream py-3 px-6 rounded-lg font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg"
+          >
+            Gem Forestillingsperiode
+          </button>
+        </form>
+      </div>
+
+      <!-- Liste over forestillingsperioder -->
+      <div class="bg-white rounded-lg shadow-xl p-8 border-2 border-gold">
+        <h3 class="text-3xl font-bold text-burgundy mb-6">📅 Mine Perioder</h3>
+        
+        <% if (perioder.length === 0) { %>
+          <p class="text-gray-600 text-center py-8">Du har ikke registreret nogen forestillingsperioder endnu.</p>
+        <% } else { %>
+          <div class="space-y-4">
+            <% perioder.forEach(periode => { %>
+              <div class="border-2 border-gold rounded-lg p-6 bg-gradient-to-r from-cream to-white">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <h4 class="text-2xl font-bold text-burgundy mb-2"><%= periode.titel %></h4>
+                    <p class="text-gray-700 mb-2">
+                      📅 <strong>Fra:</strong> <%= new Date(periode.fraDato).toLocaleDateString('da-DK') %>
+                      <strong>Til:</strong> <%= new Date(periode.tilDato).toLocaleDateString('da-DK') %>
+                    </p>
+                    <% 
+                      const now = new Date();
+                      const start = new Date(periode.fraDato);
+                      const end = new Date(periode.tilDato);
+                      const isActive = now >= start && now <= end;
+                      const isPast = now > end;
+                      const isFuture = now < start;
+                    %>
+                    <% if (isActive) { %>
+                      <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
+                        🟢 Aktiv nu
+                      </span>
+                    <% } else if (isPast) { %>
+                      <span class="inline-block px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-semibold">
+                        ⚫ Afsluttet
+                      </span>
+                    <% } else if (isFuture) { %>
+                      <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
+                        🔵 Kommende
+                      </span>
+                    <% } %>
+                  </div>
+                  
+                  <form action="/forestillingsperioder/slet/<%= periode.id %>" method="POST">
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition">
+                      Slet
+                    </button>
+                  </form>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+
+<%- include('partials/footer', { bruger }) %>

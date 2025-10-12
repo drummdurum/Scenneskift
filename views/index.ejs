@@ -1,0 +1,143 @@
+<%- include('partials/header', { bruger, currentPage: 'home', title: 'Forside' }) %>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="relative text-white min-h-screen flex items-center overflow-hidden" style="background-image: url('/images/hero/theater-551797_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
+      <!-- Dark overlay for better text readability -->
+      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+      
+      <!-- Curtain decorations -->
+      <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-burgundy via-red-900 to-burgundy opacity-70 border-r-4 border-gold z-10"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-burgundy via-red-900 to-burgundy opacity-70 border-l-4 border-gold z-10"></div>
+      
+      <div class="content-container py-20 text-center relative z-20">
+        <h2 class="text-6xl font-bold text-gold mb-6 drop-shadow-2xl animate-fade-in">Velkommen til Scenen</h2>
+        <p class="text-2xl mb-8 max-w-3xl mx-auto leading-relaxed italic drop-shadow-lg">
+          Udlejning af autentiske teaterrekvisitter til din næste forestilling. 
+          Vi bringer klassisk elegance og dramatisk atmosfære til enhver scene.
+        </p>
+        <a href="/produkter" class="inline-block bg-gold text-gray-900 px-8 py-4 text-xl font-bold uppercase tracking-wider rounded hover:bg-opacity-90 transition shadow-2xl transform hover:scale-105">
+          Se Vores Kollektion
+        </a>
+      </div>
+    </section>
+
+    <!-- Hvorfor vælge SceneSkift Section -->
+    <section class="py-20 bg-cream">
+      <div class="content-container">
+        <h3 class="text-5xl font-bold text-burgundy text-center mb-8 border-b-4 border-gold inline-block pb-4 w-full">
+          Klassisk Scenekunst
+        </h3>
+        <p class="text-xl text-center max-w-4xl mx-auto leading-relaxed text-gray-700">
+          Siden teatrets gyldne æra har rekvisitter været hjørnestenen i at skabe 
+          troværdige og fortryllende forestillinger. Vores nøje udvalgte kollektion 
+          bringer den klassiske teaters ånd til live.
+        </p>
+
+        <% if (!bruger) { %>
+          <div class="mt-12 text-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-2xl mx-auto">
+              <h4 class="text-2xl font-bold mb-4 text-burgundy">Bliv en del af vores teatersamfund</h4>
+              <p class="mb-6 text-gray-900">Registrer dig for at få adgang til at oprette og administrere rekvisitter</p>
+              <a href="/registrer" class="inline-block bg-gold text-gray-900 px-6 py-3 rounded font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg">
+                Registrer nu
+              </a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </section>
+    <!-- Konsultation Section -->
+    <section class="py-20 bg-gradient-to-br from-burgundy to-gray-900 text-white">
+      <div class="content-container">
+        <div class="max-w-4xl mx-auto text-center">
+          <div class="mb-8">
+            <span class="text-7xl">💼</span>
+          </div>
+          <h3 class="text-5xl font-bold text-gold mb-6">
+            Brug for hjælp til at finde de rette rekvisitter?
+          </h3>
+          <p class="text-xl mb-4 leading-relaxed text-cream">
+            Vores erfarne teatereksperter står klar til at hjælpe dig med at finde de perfekte rekvisitter til din forestilling.
+          </p>
+          <p class="text-lg mb-8 leading-relaxed">
+            Book en gratis konsultation og få professionel rådgivning om:
+          </p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 text-left max-w-2xl mx-auto">
+            <div class="flex items-start space-x-3">
+              <span class="text-gold text-2xl">✓</span>
+              <span>Valg af rekvisitter til din periode og stil</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-gold text-2xl">✓</span>
+              <span>Koordinering af flere reservationer</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-gold text-2xl">✓</span>
+              <span>Specialønsker og tilpasninger</span>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-gold text-2xl">✓</span>
+              <span>Priser og tilgængelighed</span>
+            </div>
+          </div>
+
+          <a href="/konsultation" class="inline-block bg-gold text-gray-900 px-10 py-5 text-xl font-bold uppercase tracking-wider rounded-lg hover:bg-opacity-90 transition shadow-2xl transform hover:scale-105">
+            📅 Book Gratis Konsultation
+          </a>
+        </div>
+      </div>
+    </section>
+    <!-- Hvorfor vælge SceneSkift Section -->
+    <section class="py-20 bg-cream">
+      <div class="content-container">
+        <h3 class="text-5xl font-bold text-center mb-4">
+          🎭 <span class="text-gold">Hvorfor vælge SceneSkift?</span>
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <!-- Card 1: Professionelt udstyr -->
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition transform hover:-translate-y-2">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gold rounded-full flex items-center justify-center">
+              <svg class="w-12 h-12 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-burgundy mb-4">Professionelt udstyr</h4>
+            <p class="text-gray-700 leading-relaxed">
+              Alt vores udstyr er professionelt og vedligeholdt til de højeste standarder.
+            </p>
+          </div>
+
+          <!-- Card 2: Hurtig booking -->
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition transform hover:-translate-y-2">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gold rounded-full flex items-center justify-center">
+              <svg class="w-12 h-12 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-burgundy mb-4">Hurtig booking</h4>
+            <p class="text-gray-700 leading-relaxed">
+              Book dit udstyr online og få øjeblikkelig bekræftelse på tilgængelighed.
+            </p>
+          </div>
+
+          <!-- Card 3: Teknisk support -->
+          <div class="bg-white rounded-lg shadow-lg p-8 text-center hover:shadow-xl transition transform hover:-translate-y-2">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gold rounded-full flex items-center justify-center">
+              <svg class="w-12 h-12 text-burgundy" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-burgundy mb-4">Teknisk support</h4>
+            <p class="text-gray-700 leading-relaxed">
+              Få hjælp og vejledning fra vores erfarne tekniske team.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<%- include('partials/footer', { bruger }) %>

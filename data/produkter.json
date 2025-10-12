@@ -1,0 +1,203 @@
+[
+  {
+    "id": 1,
+    "navn": "Venetiansk Maske",
+    "beskrivelse": "Elegant håndlavet venetiansk maske med guld ornamentik. Perfekt til maskeradescener.",
+    "pris": "350 kr/dag",
+    "billede": "/images/maske.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Lille",
+      "æra": "Renaissance",
+      "type": "Kostume tilbehør"
+    },
+    "reservationer": [
+      {
+        "fraDato": "2025-10-15",
+        "tilDato": "2025-10-20",
+        "bruger": "drumm",
+        "teaternavn": "Det Kongelige Teater"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "navn": "Antik Lysestage",
+    "beskrivelse": "Smukt forarbejdet messing lysestage fra 1800-tallet. Skaber autentisk atmosfære.",
+    "pris": "200 kr/dag",
+    "billede": "/images/lysestage.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Mellem",
+      "æra": "1800-tallet",
+      "type": "Belysning"
+    },
+    "reservationer": [
+      {
+        "fraDato": "2025-10-10",
+        "tilDato": "2025-10-18",
+        "bruger": "julie",
+        "teaternavn": "kongelige teater"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "navn": "Fløjls Draperier",
+    "beskrivelse": "Dybrøde fløjls draperier med guldkant. 3x4 meter. Klassisk teateræstetik.",
+    "pris": "500 kr/dag",
+    "billede": "/images/draperi.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Stor",
+      "æra": "Klassisk",
+      "type": "Tekstiler"
+    },
+    "reservationer": [
+      {
+        "fraDato": "2025-10-25",
+        "tilDato": "2025-10-30",
+        "bruger": "admin",
+        "teaternavn": "SceneSkift Hovedkontor"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "navn": "Vintage Mikrofon",
+    "beskrivelse": "Retro mikrofon fra 1950'erne. Funktionsdygtigt og stilfuldt.",
+    "pris": "300 kr/dag",
+    "billede": "/images/mikrofon.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Lille",
+      "æra": "1950'erne",
+      "type": "Elektronik"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 5,
+    "navn": "Tronstol",
+    "beskrivelse": "Majestætisk tronstol med udskæringer og forgyldte detaljer. Ideel til royale scener.",
+    "pris": "800 kr/dag",
+    "billede": "/images/tron.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Stor",
+      "æra": "Middelalder",
+      "type": "Møbler"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 6,
+    "navn": "Operakikkert",
+    "beskrivelse": "Elegant operakikkert med perlemor indlæg. Autentisk detalje til operascener.",
+    "pris": "150 kr/dag",
+    "billede": "/images/kikkert.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Lille",
+      "æra": "1900-tallet",
+      "type": "Kostume tilbehør"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 7,
+    "navn": "skab",
+    "beskrivelse": "det er et pænt skab ",
+    "pris": "100",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Stor",
+      "æra": "Moderne",
+      "type": "Møbler"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 8,
+    "navn": "maske ",
+    "beskrivelse": "det er en sej maske ",
+    "pris": "1200",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 2,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Lille",
+      "æra": "Moderne",
+      "type": "Kostume tilbehør"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 9,
+    "navn": "Barok Spejl",
+    "beskrivelse": "Stort forgyldt spejl i barokstil med udskæringer. Perfekt til paladscener.",
+    "pris": "600 kr/dag",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 1,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Stor",
+      "æra": "1700-tallet",
+      "type": "Dekoration"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 10,
+    "navn": "Krystalkrone",
+    "beskrivelse": "Elegant krystalkrone med 12 arme. Ægte krystaller.",
+    "pris": "1500 kr/dag",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 1,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Stor",
+      "æra": "1800-tallet",
+      "type": "Belysning"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 11,
+    "navn": "Vintage Telefon",
+    "beskrivelse": "Drejeskive telefon fra 1960'erne i sort bakelit.",
+    "pris": "250 kr/dag",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 1,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Lille",
+      "æra": "1950'erne",
+      "type": "Elektronik"
+    },
+    "reservationer": []
+  },
+  {
+    "id": 12,
+    "navn": "Lampe",
+    "beskrivelse": "Lampe brugt i Great Gatsby. Lavet af hønsenet og tekstil",
+    "pris": "100",
+    "billede": "/images/placeholder.jpg",
+    "ejerBrugerId": 3,
+    "skjult": false,
+    "kategori": {
+      "størrelse": "Mellem",
+      "æra": "1920'erne",
+      "type": "Belysning"
+    },
+    "reservationer": []
+  }
+]

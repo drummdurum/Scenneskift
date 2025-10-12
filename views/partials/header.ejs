@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title : 'Teaterrekvisitter' %> - SceneSkift</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            burgundy: '#800020',
+            gold: '#d4af37',
+            cream: '#f5f5dc',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Konsistent container bredde matchende navigation */
+    .content-container {
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    
+    /* No global main padding - use content-container instead */
+    
+    @media (max-width: 768px) {
+      .content-container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-cream font-serif">
+  <!-- Header -->
+  <header class="bg-transparent backdrop-blur-none shadow-none absolute top-0 left-0 right-0 z-50">
+    <nav class="content-container py-4">
+      <div class="flex justify-between items-center">
+        <a href="/" class="text-3xl font-bold text-gold hover:text-cream transition">🎭 SceneSkift</a>
+        <ul class="flex space-x-6 items-center">
+          <li><a href="/" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'border-b-2 border-gold' : '' %>">Forside</a></li>
+          <% if (typeof bruger !== 'undefined' && bruger) { %>
+            <li><a href="/browse" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'border-b-2 border-gold' : '' %>">Browse</a></li>
+            <li><a href="/favoritter" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'favoritter' ? 'border-b-2 border-gold' : '' %>">❤️</a></li>
+            <li><a href="<%= bruger.rolle === 'admin' ? '/admin' : '/dashboard' %>" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'dashboard' ? 'border-b-2 border-gold' : '' %>">Dashboard</a></li>
+            <li><a href="/logout" class="text-cream hover:text-gold transition">Log ud (<%= bruger.navn %>)</a></li>
+          <% } else { %>
+            <li><a href="/produkter" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'produkter' ? 'border-b-2 border-gold' : '' %>">Produkter</a></li>
+            <li><a href="/login" class="bg-gold text-gray-900 px-4 py-2 rounded font-semibold hover:bg-opacity-90 transition">Log ind</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>
+  </header>

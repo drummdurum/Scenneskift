@@ -1,0 +1,58 @@
+<%- include('partials/header', { bruger: null, currentPage: 'login', title: 'Login' }) %>
+
+  <main class="min-h-screen flex items-center justify-center py-12">
+    <div class="content-container">
+      <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md border-4 border-gold mx-auto">
+        <div class="text-center mb-8">
+          <h1 class="text-4xl font-bold text-burgundy mb-2">🎭</h1>
+          <h2 class="text-3xl font-bold text-burgundy">Login</h2>
+          <p class="text-gray-600 mt-2">Teaterrekvisitter Admin</p>
+        </div>
+
+    <% if (fejl) { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <%= fejl %>
+      </div>
+    <% } %>
+
+    <form action="/login" method="POST" class="space-y-6">
+      <div>
+        <label for="brugernavn" class="block text-gray-700 font-semibold mb-2">Brugernavn</label>
+        <input 
+          type="text" 
+          id="brugernavn" 
+          name="brugernavn" 
+          required
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <div>
+        <label for="password" class="block text-gray-700 font-semibold mb-2">Adgangskode</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          required
+          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition"
+        >
+      </div>
+
+      <button 
+        type="submit"
+        class="w-full bg-burgundy text-cream py-3 px-6 rounded-lg font-bold uppercase tracking-wider hover:bg-opacity-90 transition shadow-lg"
+      >
+        Log ind
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <a href="/registrer" class="text-burgundy hover:text-gold transition">Opret ny konto</a>
+      <span class="mx-2 text-gray-400">|</span>
+      <a href="/" class="text-burgundy hover:text-gold transition">Tilbage til forsiden</a>
+    </div>
+      </div>
+    </div>
+  </main>
+
+<%- include('partials/footer', { bruger: null }) %>
