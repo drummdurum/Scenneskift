@@ -648,11 +648,25 @@ app.get('/tilkoeb', authMiddleware, (req, res) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Serveren kører på port ${PORT}`);
-  console.log(`Environment: ${NODE_ENV}`);
-  if (NODE_ENV === 'development') {
-    console.log(`Lokal URL: http://localhost:${PORT}`);
-    console.log('Admin login: brugernavn=admin, password=admin123');
+async function startServer() {
+  try {
+    // Initialiser database hvis vi bruger PostgreSQL
+    if (USE_DATABASE && initializeDatabase) {
+      await initializeDatabase();
+    }
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Serveren kører på port ${PORT}`);
+      console.log(`Environment: ${NODE_ENV}`);
+      if (NODE_ENV === 'development') {
+        console.log(`Lokal URL: http://localhost:${PORT}`);
+        console.log('Admin login: brugernavn=admin, password=admin123');
+      }
+    });
+  } catch (error) {
+    console.error('Fejl ved start af server:', error);
+    process.exit(1);
   }
-});
+}
+
+startServer();
