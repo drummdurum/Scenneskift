@@ -54,6 +54,7 @@ const productRoutes = require('./routes/products');
 const dashboardRoutes = require('./routes/dashboard');
 const adminRoutes = require('./routes/admin');
 const browseRoutes = require('./routes/browse');
+const favoritRoutes = require('./routes/favoritter');
 const periodsRoutes = require('./routes/periods');
 const consultationRoutes = require('./routes/consultation');
 const tilkoebRoutes = require('./routes/tilkoeb');
@@ -70,8 +71,8 @@ app.use('/produkt', productRoutes);                    // /produkt/:id (alias)
 app.use('/dashboard', dashboardRoutes);                // /dashboard, /dashboard/opret-produkt
 app.use('/admin', adminRoutes);                        // /admin/*
 app.use('/browse', browseRoutes);                      // /browse
-app.use('/favorit', browseRoutes);                     // /favorit/:id (FIX: moved from /browse/favorit)
-app.use('/favoritter', browseRoutes);                  // /favoritter (handled by browse.js)
+app.use('/favorit', browseRoutes);                     // /favorit/:id (toggle favorit)
+app.use('/favoritter', favoritRoutes);                 // /favoritter (vis favoritter)
 app.use('/forestillingsperioder', periodsRoutes);      // /forestillingsperioder
 app.use('/konsultation', consultationRoutes);          // /konsultation
 app.use('/tilkoeb', tilkoebRoutes);                    // /tilkoeb
