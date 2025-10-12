@@ -1,0 +1,74 @@
+const express = require('express');
+const router = express.Router();
+const { authMiddleware } = require('../middleware/auth');
+const { pool } = require('../db');
+
+// Alle routes bruger authMiddleware
+router.use(authMiddleware);
+
+// Dashboard
+router.get('/', async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT * FROM produkter WHERE ejer_bruger_id = $1 ORDER BY id',
+      [req.session.bruger.id]
+    );
+    
+    res.render('dashboard', { 
+      bruger: req.session.bruger, 
+      produkter: result.rows 
+    });
+  } catch (error) {
+    console.error('❌ Fejl ved hentning af brugerens produkter:', error);
+    res.render('dashboard', { 
+      bruger: req.session.bruger, 
+      produkter: [] 
+    });
+  }
+});
+
+// Vis opret produkt formular
+router.get('/opret-produkt', (req, res) => {
+  res.render('opret-produkt', { 
+    bruger: req.session.bruger, 
+    fejl: null, 
+    success: null 
+  });
+});
+
+// Opret nyt produkt
+router.post('/opret-produkt', async (req, res) => {
+  const { navn, beskrivelse, pris, billede, størrelse, æra, type } = req.body;
+  
+  try {
+    await pool.query(
+      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori, reservationer)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        navn,
+        beskrivelse,
+        pris,
+        billede || '/images/placeholder.jpg',
+        req.session.bruger.id,
+        false,
+        JSON.stringify({ størrelse, æra, type }),
+        JSON.stringify([])
+      ]
+    );
+    
+    res.render('opret-produkt', { 
+      bruger: req.session.bruger, 
+      fejl: null, 
+      success: 'Produkt oprettet!' 
+    });
+  } catch (error) {
+    console.error('❌ Fejl ved oprettelse af produkt:', error);
+    res.render('opret-produkt', { 
+      bruger: req.session.bruger, 
+      fejl: 'Der opstod en fejl. Prøv igen.', 
+      success: null 
+    });
+  }
+});
+
+module.exports = router;
