@@ -22,9 +22,12 @@ router.get('/', async (req, res) => {
 // Vis produkt detaljer
 router.get('/:id', async (req, res) => {
   try {
+    const produktId = parseInt(req.params.id);
+    
+    // Hent produkt
     const result = await pool.query(
       'SELECT * FROM produkter WHERE id = $1',
-      [parseInt(req.params.id)]
+      [produktId]
     );
     
     const produkt = result.rows[0];
@@ -32,6 +35,20 @@ router.get('/:id', async (req, res) => {
     if (!produkt) {
       return res.status(404).send('Produkt ikke fundet');
     }
+    
+    // Hent reservationer for dette produkt fra reservationer tabel
+    const reservationerResult = await pool.query(
+      'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
+      [produktId]
+    );
+    
+    // Tilføj reservationer til produkt objekt med korrekt format
+    produkt.reservationer = reservationerResult.rows.map(r => ({
+      fraDato: r.fra_dato,
+      tilDato: r.til_dato,
+      bruger: r.bruger,
+      teaternavn: r.teaternavn
+    }));
     
     res.render('produkt-detalje', { 
       produkt, 
@@ -79,16 +96,19 @@ router.post('/:id/reserver', async (req, res) => {
       });
     }
 
-    // Tjek om produktet allerede er reserveret i denne periode
-    const reservationer = produkt.reservationer || [];
-    
-    const harKonflikt = reservationer.some(res => {
-      const resFra = new Date(res.fraDato);
-      const resTil = new Date(res.tilDato);
-      return (fra <= resTil && til >= resFra);
-    });
+    // Tjek om produktet allerede er reserveret i denne periode (fra reservationer tabel)
+    const konfliktCheck = await pool.query(
+      `SELECT * FROM reservationer 
+       WHERE produkt_id = $1 
+       AND (
+         (fra_dato <= $2 AND til_dato >= $2) OR
+         (fra_dato <= $3 AND til_dato >= $3) OR
+         (fra_dato >= $2 AND til_dato <= $3)
+       )`,
+      [produktId, fraDato, tilDato]
+    );
 
-    if (harKonflikt) {
+    if (konfliktCheck.rows.length > 0) {
       return res.render('produkt-detalje', { 
         produkt, 
         bruger: req.session.bruger, 
@@ -97,36 +117,77 @@ router.post('/:id/reserver', async (req, res) => {
       });
     }
 
-    // Tilføj reservation
-    const nyReservation = {
-      fraDato,
-      tilDato,
-      bruger: req.session.bruger.brugernavn,
-      teaternavn: req.session.bruger.teaternavn
-    };
-    
-    reservationer.push(nyReservation);
-    
+    // Tilføj reservation til reservationer tabel
     await pool.query(
-      'UPDATE produkter SET reservationer = $1 WHERE id = $2',
-      [JSON.stringify(reservationer), produktId]
+      `INSERT INTO reservationer (produkt_id, bruger, teaternavn, fra_dato, til_dato)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [produktId, req.session.bruger.brugernavn, req.session.bruger.teaternavn, fraDato, tilDato]
     );
 
-    // Hent opdateret produkt
+    // Hent opdateret produkt med reservationer
     const opdateretResult = await pool.query(
       'SELECT * FROM produkter WHERE id = $1',
       [produktId]
     );
+    
+    const opdateretProdukt = opdateretResult.rows[0];
+    
+    // Hent reservationer for dette produkt
+    const reservationerResult = await pool.query(
+      'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
+      [produktId]
+    );
+    
+    // Tilføj reservationer til produkt objekt
+    opdateretProdukt.reservationer = reservationerResult.rows.map(r => ({
+      fraDato: r.fra_dato,
+      tilDato: r.til_dato,
+      bruger: r.bruger,
+      teaternavn: r.teaternavn
+    }));
 
     res.render('produkt-detalje', { 
-      produkt: opdateretResult.rows[0], 
+      produkt: opdateretProdukt, 
       bruger: req.session.bruger, 
       fejl: null, 
       success: 'Produkt reserveret!' 
     });
   } catch (error) {
     console.error('❌ Fejl ved reservation:', error);
-    res.status(500).send('Der opstod en fejl');
+    console.error('Error details:', error.message);
+    
+    // Hent produktet igen for at vise fejl
+    try {
+      const result = await pool.query(
+        'SELECT * FROM produkter WHERE id = $1',
+        [produktId]
+      );
+      
+      const produkt = result.rows[0];
+      
+      // Hent reservationer
+      const reservationerResult = await pool.query(
+        'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
+        [produktId]
+      );
+      
+      produkt.reservationer = reservationerResult.rows.map(r => ({
+        fraDato: r.fra_dato,
+        tilDato: r.til_dato,
+        bruger: r.bruger,
+        teaternavn: r.teaternavn
+      }));
+      
+      res.render('produkt-detalje', { 
+        produkt: produkt, 
+        bruger: req.session.bruger, 
+        fejl: 'Der opstod en fejl ved reservation. Prøv igen.', 
+        success: null 
+      });
+    } catch (innerError) {
+      console.error('❌ Fejl ved hentning af produkt efter fejl:', innerError);
+      res.status(500).send('Der opstod en fejl');
+    }
   }
 });
 

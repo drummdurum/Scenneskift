@@ -29,6 +29,13 @@ router.get('/', async (req, res) => {
     );
     const favoritter = brugerResult.rows[0]?.favoritter || [];
     
+    // Hent alle reservationer hvis der søges med datoer
+    let alleReservationer = [];
+    if (fraDato && tilDato) {
+      const reservationerResult = await pool.query('SELECT * FROM reservationer');
+      alleReservationer = reservationerResult.rows;
+    }
+    
     // Tilføj teater information og tilgængelighed til hvert produkt
     const produkterMedTeater = produkterResult.rows.map(p => {
       const ejer = brugere.find(b => b.id === p.ejer_bruger_id);
@@ -39,11 +46,11 @@ router.get('/', async (req, res) => {
         const søgFra = new Date(fraDato);
         const søgTil = new Date(tilDato);
         
-        // Tjek om produktet har reservationer der overlapper med søgeperioden
-        const reservationer = p.reservationer || [];
-        const harKonflikt = reservationer.some(res => {
-          const resFra = new Date(res.fraDato);
-          const resTil = new Date(res.tilDato);
+        // Tjek om produktet har reservationer der overlapper med søgeperioden (fra reservationer tabel)
+        const produktReservationer = alleReservationer.filter(r => r.produkt_id === p.id);
+        const harKonflikt = produktReservationer.some(res => {
+          const resFra = new Date(res.fra_dato);
+          const resTil = new Date(res.til_dato);
           return (søgFra <= resTil && søgTil >= resFra);
         });
         
@@ -85,8 +92,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Tilføj/fjern favorit
-router.post('/favorit/:id', async (req, res) => {
+// Tilføj/fjern favorit - FIX: ændret til at håndtere både /favorit/:id og /browse/favorit/:id
+router.post('/:id', async (req, res) => {
   try {
     const produktId = parseInt(req.params.id);
     
@@ -105,10 +112,10 @@ router.post('/favorit/:id', async (req, res) => {
       favoritter.push(produktId); // Tilføj favorit
     }
     
-    // Opdater i database
+    // Opdater i database med array format
     await pool.query(
       'UPDATE brugere SET favoritter = $1 WHERE id = $2',
-      [JSON.stringify(favoritter), req.session.bruger.id]
+      [favoritter, req.session.bruger.id]
     );
     
     res.redirect('/browse');

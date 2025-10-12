@@ -69,7 +69,8 @@ app.use('/produkter', productRoutes);                  // /produkter, /produkter
 app.use('/produkt', productRoutes);                    // /produkt/:id (alias)
 app.use('/dashboard', dashboardRoutes);                // /dashboard, /dashboard/opret-produkt
 app.use('/admin', adminRoutes);                        // /admin/*
-app.use('/browse', browseRoutes);                      // /browse, /favorit/:id
+app.use('/browse', browseRoutes);                      // /browse
+app.use('/favorit', browseRoutes);                     // /favorit/:id (FIX: moved from /browse/favorit)
 app.use('/favoritter', browseRoutes);                  // /favoritter (handled by browse.js)
 app.use('/forestillingsperioder', periodsRoutes);      // /forestillingsperioder
 app.use('/konsultation', consultationRoutes);          // /konsultation
