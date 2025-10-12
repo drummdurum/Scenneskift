@@ -163,6 +163,7 @@ const gemProdukter = (produkter) => {
 
 // Middleware til at tjekke om bruger er logget ind
 const authMiddleware = (req, res, next) => {
+  console.log('🔒 authMiddleware - Session:', req.session.bruger ? 'Findes' : 'Findes IKKE');
   if (req.session.bruger) {
     next();
   } else {
@@ -172,9 +173,13 @@ const authMiddleware = (req, res, next) => {
 
 // Middleware til at tjekke om bruger er admin
 const adminMiddleware = (req, res, next) => {
+  console.log('👑 adminMiddleware - Session:', req.session.bruger);
+  console.log('👑 adminMiddleware - Rolle:', req.session.bruger?.rolle);
   if (req.session.bruger && req.session.bruger.rolle === 'admin') {
+    console.log('✅ Admin adgang godkendt');
     next();
   } else {
+    console.log('❌ Admin adgang nægtet');
     res.status(403).send('Adgang nægtet');
   }
 };
@@ -329,13 +334,23 @@ app.post('/login', async (req, res) => {
     
     console.log('📝 Session oprettet:', req.session.bruger);
     
-    if (bruger.rolle === 'admin') {
-      console.log('➡️  Redirecter til /admin');
-      res.redirect('/admin');
-    } else {
-      console.log('➡️  Redirecter til /dashboard');
-      res.redirect('/dashboard');
-    }
+    // Gem session før redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('❌ Fejl ved gemning af session:', err);
+        return res.render('login', { fejl: 'Der opstod en fejl. Prøv igen.' });
+      }
+      
+      console.log('💾 Session gemt succesfuldt');
+      
+      if (bruger.rolle === 'admin') {
+        console.log('➡️  Redirecter til /admin');
+        res.redirect('/admin');
+      } else {
+        console.log('➡️  Redirecter til /dashboard');
+        res.redirect('/dashboard');
+      }
+    });
   } else {
     console.log('❌ Forkert password');
     res.render('login', { fejl: 'Ugyldig brugernavn eller adgangskode' });
