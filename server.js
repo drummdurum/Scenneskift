@@ -8,21 +8,45 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'teater-hemmelighed-2025';
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const USE_DATABASE = !!process.env.DATABASE_URL;
 
-// Middleware
-app.use(express.static('public'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(session({
+// Database setup (hvis DATABASE_URL er sat)
+let pool, initializeDatabase;
+if (USE_DATABASE) {
+  const db = require('./db');
+  pool = db.pool;
+  initializeDatabase = db.initializeDatabase;
+  console.log('📊 Bruger PostgreSQL database');
+} else {
+  console.log('📁 Bruger JSON fil storage');
+}
+
+// Session setup
+const sessionConfig = {
   secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: { 
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dage
     httpOnly: true,
-    secure: NODE_ENV === 'production' // Sæt til true i produktion (HTTPS)
+    secure: NODE_ENV === 'production'
   }
-}));
+};
+
+// Hvis vi bruger database, tilføj database session store
+if (USE_DATABASE) {
+  const pgSession = require('connect-pg-simple')(session);
+  sessionConfig.store = new pgSession({
+    pool: pool,
+    createTableIfMissing: true
+  });
+}
+
+// Middleware
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session(sessionConfig));
 
 // View engine setup
 app.set('view engine', 'ejs');
