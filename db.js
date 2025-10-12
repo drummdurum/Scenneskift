@@ -73,12 +73,16 @@ async function initializeDatabase() {
     console.log('✅ Database tabeller initialiseret');
 
     // Check if admin user exists, if not create it
+    console.log('🔍 Tjekker om admin bruger eksisterer...');
     const adminCheck = await client.query(
       'SELECT id FROM brugere WHERE brugernavn = $1',
       ['admin']
     );
 
+    console.log(`Found ${adminCheck.rows.length} admin users`);
+
     if (adminCheck.rows.length === 0) {
+      console.log('⏳ Opretter admin bruger...');
       const bcrypt = require('bcryptjs');
       const adminPassword = await bcrypt.hash('admin123', 10);
       
@@ -88,15 +92,21 @@ async function initializeDatabase() {
       `, ['admin', adminPassword, 'admin', true, 'Administrator', 'admin', 'SceneSkift Hovedkontor', 'Aarhus', 500]);
 
       console.log('✅ Admin bruger oprettet (admin/admin123)');
+    } else {
+      console.log('ℹ️  Admin bruger eksisterer allerede');
     }
 
     // Check if drumm user exists
+    console.log('🔍 Tjekker om drumm bruger eksisterer...');
     const drummCheck = await client.query(
       'SELECT id FROM brugere WHERE brugernavn = $1',
       ['drumm']
     );
 
+    console.log(`Found ${drummCheck.rows.length} drumm users`);
+
     if (drummCheck.rows.length === 0) {
+      console.log('⏳ Opretter drumm bruger...');
       const bcrypt = require('bcryptjs');
       const drummPassword = await bcrypt.hash('drumm123', 10);
       
@@ -106,6 +116,8 @@ async function initializeDatabase() {
       `, ['drumm', drummPassword, 'teater', true, 'Sebastian', 'teater', 'Det Kongelige Teater', 'København', 250]);
 
       console.log('✅ Drumm bruger oprettet (drumm/drumm123)');
+    } else {
+      console.log('ℹ️  Drumm bruger eksisterer allerede');
     }
 
   } catch (err) {
