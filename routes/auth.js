@@ -113,8 +113,8 @@ router.post('/registrer', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     
     await pool.query(
-      `INSERT INTO brugere (brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, favoritter, forestillingsperioder)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      `INSERT INTO brugere (brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, favoritter)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         brugernavn,
         hashedPassword,
@@ -124,8 +124,7 @@ router.post('/registrer', async (req, res) => {
         'teater',
         teaternavn || navn,
         lokation,
-        JSON.stringify([]),
-        JSON.stringify([])
+        [] // PostgreSQL array format for favoritter
       ]
     );
     
