@@ -71,7 +71,20 @@ SESSION_SECRET=din-sikre-hemmelige-nøgle-her
 NODE_ENV=production
 ```
 
-### Trin 4: Åbn din app
+### Trin 4: Tilføj Volume for Persistent Data (VIGTIGT!)
+
+Railway's filsystem er midlertidigt - data går tabt ved restart. Tilføj et Volume:
+
+1. I Railway Dashboard, gå til dit projekt
+2. Klik på "Variables" tab
+3. Scroll ned til "Volumes"
+4. Klik "New Volume"
+5. **Mount Path:** `/app/data`
+6. Klik "Add"
+
+Dette sikrer at brugere og produkter bliver gemt permanent!
+
+### Trin 5: Åbn din app
 
 Railway giver dig automatisk en URL som: `https://your-app.up.railway.app`
 

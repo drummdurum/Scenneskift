@@ -28,23 +28,113 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Sørg for at data mappen eksisterer
+if (!fs.existsSync('./data')) {
+  fs.mkdirSync('./data', { recursive: true });
+}
+
+// Initialiser data filer hvis de ikke eksisterer
+const initializeDataFiles = () => {
+  // Standard brugere
+  const defaultBrugere = [
+    {
+      "id": 1,
+      "brugernavn": "admin",
+      "password": "$2a$10$1puYu9yUU4tWb8AivGy43OT3kpaN1A/f9zUxGbrR0uW/ov.HJkr8G",
+      "rolle": "admin",
+      "aktiv": true,
+      "navn": "Administrator",
+      "type": "admin",
+      "teaternavn": "SceneSkift Hovedkontor",
+      "lokation": "Aarhus",
+      "favoritter": [],
+      "forestillingsperioder": [],
+      "points": 500
+    },
+    {
+      "id": 2,
+      "brugernavn": "drumm",
+      "password": "$2a$10$iSpgYMrRH60b.cuUIIoLjuiAnlK4IvD7RADc3LfTWGNQJlWfCwSuW",
+      "rolle": "teater",
+      "aktiv": true,
+      "navn": "sebastian",
+      "type": "teater",
+      "teaternavn": "Det Kongelige Teater",
+      "lokation": "København",
+      "favoritter": [],
+      "forestillingsperioder": [],
+      "points": 250
+    }
+  ];
+
+  // Standard produkter
+  const defaultProdukter = [
+    {
+      "id": 1,
+      "navn": "Venetiansk Maske",
+      "beskrivelse": "Elegant håndlavet venetiansk maske med guld ornamentik. Perfekt til maskeradescener.",
+      "pris": "350 kr/dag",
+      "billede": "/images/maske.jpg",
+      "ejerBrugerId": 2,
+      "skjult": false,
+      "kategori": {
+        "størrelse": "Lille",
+        "æra": "Renaissance",
+        "type": "Kostume tilbehør"
+      },
+      "reservationer": []
+    }
+  ];
+
+  if (!fs.existsSync('./data/brugere.json')) {
+    fs.writeFileSync('./data/brugere.json', JSON.stringify(defaultBrugere, null, 2));
+    console.log('✅ Initialiserede brugere.json med standard data');
+  }
+
+  if (!fs.existsSync('./data/produkter.json')) {
+    fs.writeFileSync('./data/produkter.json', JSON.stringify(defaultProdukter, null, 2));
+    console.log('✅ Initialiserede produkter.json med standard data');
+  }
+};
+
+// Initialiser data ved opstart
+initializeDataFiles();
+
 // Helper functions
 const læsBrugere = () => {
-  const data = fs.readFileSync('./data/brugere.json', 'utf8');
-  return JSON.parse(data);
+  try {
+    const data = fs.readFileSync('./data/brugere.json', 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Fejl ved læsning af brugere:', error);
+    return [];
+  }
 };
 
 const gemBrugere = (brugere) => {
-  fs.writeFileSync('./data/brugere.json', JSON.stringify(brugere, null, 2));
+  try {
+    fs.writeFileSync('./data/brugere.json', JSON.stringify(brugere, null, 2));
+  } catch (error) {
+    console.error('Fejl ved gemning af brugere:', error);
+  }
 };
 
 const læsProdukter = () => {
-  const data = fs.readFileSync('./data/produkter.json', 'utf8');
-  return JSON.parse(data);
+  try {
+    const data = fs.readFileSync('./data/produkter.json', 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Fejl ved læsning af produkter:', error);
+    return [];
+  }
 };
 
 const gemProdukter = (produkter) => {
-  fs.writeFileSync('./data/produkter.json', JSON.stringify(produkter, null, 2));
+  try {
+    fs.writeFileSync('./data/produkter.json', JSON.stringify(produkter, null, 2));
+  } catch (error) {
+    console.error('Fejl ved gemning af produkter:', error);
+  }
 };
 
 // Middleware til at tjekke om bruger er logget ind
