@@ -29,6 +29,13 @@ router.get('/', async (req, res) => {
     );
     const favoritter = brugerResult.rows[0]?.favoritter || [];
     
+    // Hent brugerens forestillingsperioder fra forestillingsperioder tabel
+    const perioderResult = await pool.query(
+      'SELECT * FROM forestillingsperioder WHERE bruger_id = $1 ORDER BY fra_dato',
+      [req.session.bruger.id]
+    );
+    const forestillingsperioder = perioderResult.rows;
+    
     // Hent alle reservationer hvis der søges med datoer
     let alleReservationer = [];
     if (fraDato && tilDato) {
@@ -77,6 +84,7 @@ router.get('/', async (req, res) => {
       bruger: req.session.bruger, 
       produkter: produkterMedTeater,
       favoritter: favoritter,
+      forestillingsperioder: forestillingsperioder,
       søgFraDato: fraDato || '',
       søgTilDato: tilDato || ''
     });
@@ -86,6 +94,7 @@ router.get('/', async (req, res) => {
       bruger: req.session.bruger, 
       produkter: [],
       favoritter: [],
+      forestillingsperioder: [],
       søgFraDato: '',
       søgTilDato: ''
     });
