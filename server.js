@@ -275,9 +275,26 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { brugernavn, password } = req.body;
-  const brugere = læsBrugere();
   
-  const bruger = brugere.find(b => b.brugernavn === brugernavn);
+  let bruger;
+  
+  if (USE_DATABASE) {
+    // Brug database
+    try {
+      const result = await pool.query(
+        'SELECT * FROM brugere WHERE brugernavn = $1',
+        [brugernavn]
+      );
+      bruger = result.rows[0];
+    } catch (error) {
+      console.error('Database fejl ved login:', error);
+      return res.render('login', { fejl: 'Der opstod en fejl. Prøv igen.' });
+    }
+  } else {
+    // Brug JSON fil
+    const brugere = læsBrugere();
+    bruger = brugere.find(b => b.brugernavn === brugernavn);
+  }
   
   if (!bruger) {
     return res.render('login', { fejl: 'Ugyldig brugernavn eller adgangskode' });
@@ -294,7 +311,8 @@ app.post('/login', async (req, res) => {
       id: bruger.id,
       brugernavn: bruger.brugernavn,
       rolle: bruger.rolle,
-      navn: bruger.navn
+      navn: bruger.navn,
+      teaternavn: bruger.teaternavn
     };
     
     if (bruger.rolle === 'admin') {
