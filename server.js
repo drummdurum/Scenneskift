@@ -276,18 +276,25 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   const { brugernavn, password } = req.body;
   
+  console.log('🔐 Login forsøg:', brugernavn);
+  
   let bruger;
   
   if (USE_DATABASE) {
     // Brug database
+    console.log('📊 Søger i database efter bruger:', brugernavn);
     try {
       const result = await pool.query(
         'SELECT * FROM brugere WHERE brugernavn = $1',
         [brugernavn]
       );
       bruger = result.rows[0];
+      console.log('🔍 Fundet bruger:', bruger ? 'Ja' : 'Nej');
+      if (bruger) {
+        console.log('👤 Bruger info:', { id: bruger.id, brugernavn: bruger.brugernavn, rolle: bruger.rolle, aktiv: bruger.aktiv });
+      }
     } catch (error) {
-      console.error('Database fejl ved login:', error);
+      console.error('❌ Database fejl ved login:', error);
       return res.render('login', { fejl: 'Der opstod en fejl. Prøv igen.' });
     }
   } else {
@@ -297,16 +304,21 @@ app.post('/login', async (req, res) => {
   }
   
   if (!bruger) {
+    console.log('❌ Bruger ikke fundet');
     return res.render('login', { fejl: 'Ugyldig brugernavn eller adgangskode' });
   }
 
   if (!bruger.aktiv) {
+    console.log('❌ Bruger er ikke aktiv');
     return res.render('login', { fejl: 'Din konto er deaktiveret. Kontakt admin.' });
   }
   
+  console.log('🔒 Tjekker password...');
   const passwordMatch = await bcrypt.compare(password, bruger.password);
+  console.log('🔓 Password match:', passwordMatch);
   
   if (passwordMatch) {
+    console.log('✅ Login success! Opretter session...');
     req.session.bruger = {
       id: bruger.id,
       brugernavn: bruger.brugernavn,
@@ -315,12 +327,17 @@ app.post('/login', async (req, res) => {
       teaternavn: bruger.teaternavn
     };
     
+    console.log('📝 Session oprettet:', req.session.bruger);
+    
     if (bruger.rolle === 'admin') {
+      console.log('➡️  Redirecter til /admin');
       res.redirect('/admin');
     } else {
+      console.log('➡️  Redirecter til /dashboard');
       res.redirect('/dashboard');
     }
   } else {
+    console.log('❌ Forkert password');
     res.render('login', { fejl: 'Ugyldig brugernavn eller adgangskode' });
   }
 });
