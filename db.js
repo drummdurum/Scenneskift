@@ -120,11 +120,105 @@ async function initializeDatabase() {
       console.log('ℹ️  Drumm bruger eksisterer allerede');
     }
 
+    // Migrer produkter fra JSON hvis de findes
+    await migrateProductsFromJSON(client);
+
   } catch (err) {
     console.error('Fejl ved initialisering af database:', err);
     throw err;
   } finally {
     client.release();
+  }
+}
+
+// Migrer produkter fra JSON fil til database
+async function migrateProductsFromJSON(client) {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const jsonPath = path.join(__dirname, 'data', 'produkter.json');
+    
+    // Tjek om JSON fil eksisterer
+    if (!fs.existsSync(jsonPath)) {
+      console.log('ℹ️  Ingen produkter.json fil fundet - springer migration over');
+      return;
+    }
+
+    console.log('📦 Tjekker for produkter i JSON fil...');
+    const produkterJSON = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+    
+    if (produkterJSON.length === 0) {
+      console.log('ℹ️  Ingen produkter at migrere');
+      return;
+    }
+
+    console.log(`📦 Fandt ${produkterJSON.length} produkter i JSON fil`);
+    
+    let produkterOprettet = 0;
+    let reservationerOprettet = 0;
+
+    for (const produkt of produkterJSON) {
+      // Tjek om produktet allerede eksisterer (baseret på navn og ejer)
+      const existing = await client.query(
+        'SELECT id FROM produkter WHERE navn = $1 AND ejer_bruger_id = $2',
+        [produkt.navn, produkt.ejerBrugerId]
+      );
+
+      if (existing.rows.length > 0) {
+        continue; // Spring over hvis eksisterer
+      }
+
+      // Indsæt produkt
+      const result = await client.query(`
+        INSERT INTO produkter (
+          navn, beskrivelse, pris, billede, ejer_bruger_id, skjult,
+          kategori_størrelse, kategori_æra, kategori_type
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING id
+      `, [
+        produkt.navn,
+        produkt.beskrivelse,
+        produkt.pris,
+        produkt.billede,
+        produkt.ejerBrugerId,
+        produkt.skjult,
+        produkt.kategori?.størrelse,
+        produkt.kategori?.æra,
+        produkt.kategori?.type
+      ]);
+
+      const nyProduktId = result.rows[0].id;
+      produkterOprettet++;
+
+      // Indsæt reservationer hvis der er nogen
+      if (produkt.reservationer && produkt.reservationer.length > 0) {
+        for (const res of produkt.reservationer) {
+          await client.query(`
+            INSERT INTO reservationer (
+              produkt_id, bruger, teaternavn, fra_dato, til_dato
+            ) VALUES ($1, $2, $3, $4, $5)
+          `, [
+            nyProduktId,
+            res.bruger,
+            res.teaternavn,
+            res.fraDato,
+            res.tilDato
+          ]);
+          reservationerOprettet++;
+        }
+      }
+    }
+
+    if (produkterOprettet > 0) {
+      console.log(`✅ Produkter migreret: ${produkterOprettet}`);
+      console.log(`✅ Reservationer migreret: ${reservationerOprettet}`);
+    } else {
+      console.log('ℹ️  Alle produkter eksisterer allerede i databasen');
+    }
+
+  } catch (error) {
+    console.error('⚠️  Fejl ved migration af produkter (fortsætter alligevel):', error.message);
+    // Fortsæt selv om migration fejler
   }
 }
 
