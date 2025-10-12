@@ -1,5 +1,5 @@
 // Database helper functions for produkter
-const { pool } = require('./db');
+const { pool } = require('../db');
 
 const ProduktDB = {
   // Find alle produkter

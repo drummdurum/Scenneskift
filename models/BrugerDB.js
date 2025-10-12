@@ -1,5 +1,5 @@
 // Database helper functions for brugere
-const { pool } = require('./db');
+const { pool } = require('../db');
 
 const BrugerDB = {
   // Find alle brugere
