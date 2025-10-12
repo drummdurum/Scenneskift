@@ -10,15 +10,13 @@ router.use(authMiddleware);
 router.get('/', async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT forestillingsperioder FROM brugere WHERE id = $1',
+      'SELECT * FROM forestillingsperioder WHERE bruger_id = $1 ORDER BY fra_dato',
       [req.session.bruger.id]
     );
     
-    const perioder = result.rows[0]?.forestillingsperioder || [];
-    
     res.render('forestillingsperioder', { 
       bruger: req.session.bruger,
-      perioder: perioder
+      perioder: result.rows
     });
   } catch (error) {
     console.error('❌ Fejl ved hentning af forestillingsperioder:', error);
@@ -34,26 +32,10 @@ router.post('/', async (req, res) => {
   const { titel, fraDato, tilDato } = req.body;
   
   try {
-    // Hent nuværende perioder
-    const result = await pool.query(
-      'SELECT forestillingsperioder FROM brugere WHERE id = $1',
-      [req.session.bruger.id]
-    );
-    
-    let perioder = result.rows[0]?.forestillingsperioder || [];
-    
-    // Tilføj ny periode
-    perioder.push({
-      id: Date.now(),
-      titel,
-      fraDato,
-      tilDato
-    });
-    
-    // Opdater i database
+    // Indsæt ny periode i forestillingsperioder tabel
     await pool.query(
-      'UPDATE brugere SET forestillingsperioder = $1 WHERE id = $2',
-      [JSON.stringify(perioder), req.session.bruger.id]
+      'INSERT INTO forestillingsperioder (bruger_id, titel, fra_dato, til_dato) VALUES ($1, $2, $3, $4)',
+      [req.session.bruger.id, titel, fraDato, tilDato]
     );
     
     res.redirect('/forestillingsperioder');
@@ -68,21 +50,10 @@ router.post('/slet/:id', async (req, res) => {
   try {
     const periodeId = parseInt(req.params.id);
     
-    // Hent nuværende perioder
-    const result = await pool.query(
-      'SELECT forestillingsperioder FROM brugere WHERE id = $1',
-      [req.session.bruger.id]
-    );
-    
-    let perioder = result.rows[0]?.forestillingsperioder || [];
-    
-    // Filtrer væk den slettede periode
-    perioder = perioder.filter(p => p.id !== periodeId);
-    
-    // Opdater i database
+    // Slet periode fra forestillingsperioder tabel
     await pool.query(
-      'UPDATE brugere SET forestillingsperioder = $1 WHERE id = $2',
-      [JSON.stringify(perioder), req.session.bruger.id]
+      'DELETE FROM forestillingsperioder WHERE id = $1 AND bruger_id = $2',
+      [periodeId, req.session.bruger.id]
     );
     
     res.redirect('/forestillingsperioder');
