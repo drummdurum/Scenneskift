@@ -58,6 +58,7 @@ const favoritRoutes = require('./routes/favoritter');
 const periodsRoutes = require('./routes/periods');
 const consultationRoutes = require('./routes/consultation');
 const tilkoebRoutes = require('./routes/tilkoeb');
+const debugRoutes = require('./routes/debug');
 
 // Public routes
 app.get('/', (req, res) => {
@@ -76,6 +77,7 @@ app.use('/favoritter', favoritRoutes);                 // /favoritter (vis favor
 app.use('/forestillingsperioder', periodsRoutes);      // /forestillingsperioder
 app.use('/konsultation', consultationRoutes);          // /konsultation
 app.use('/tilkoeb', tilkoebRoutes);                    // /tilkoeb
+app.use('/debug-brugere', debugRoutes);                // /debug-brugere (KUN development)
 
 // Start server
 async function startServer() {
