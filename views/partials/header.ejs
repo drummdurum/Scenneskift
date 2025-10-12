@@ -36,6 +36,14 @@
         padding-right: 20px;
       }
     }
+
+    /* Mobile menu styles */
+    .mobile-menu {
+      display: none;
+    }
+    .mobile-menu.active {
+      display: block;
+    }
   </style>
 </head>
 <body class="bg-cream font-serif">
@@ -43,8 +51,18 @@
   <header class="bg-transparent backdrop-blur-none shadow-none absolute top-0 left-0 right-0 z-50">
     <nav class="content-container py-4">
       <div class="flex justify-between items-center">
-        <a href="/" class="text-3xl font-bold text-gold hover:text-cream transition">🎭 SceneSkift</a>
-        <ul class="flex space-x-6 items-center">
+        <!-- Logo - skjul maske på mobil -->
+        <a href="/" class="text-2xl md:text-3xl font-bold text-gold hover:text-cream transition">
+          <span class="hidden md:inline">🎭 </span>SceneSkift
+        </a>
+        
+        <!-- Hamburger Menu Button (kun mobil) -->
+        <button id="mobile-menu-btn" class="md:hidden text-gold text-3xl focus:outline-none">
+          ☰
+        </button>
+
+        <!-- Desktop Menu (skjult på mobil) -->
+        <ul class="hidden md:flex space-x-6 items-center">
           <li><a href="/" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'border-b-2 border-gold' : '' %>">Forside</a></li>
           <% if (typeof bruger !== 'undefined' && bruger) { %>
             <li><a href="/browse" class="text-cream hover:text-gold transition <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'border-b-2 border-gold' : '' %>">Browse</a></li>
@@ -57,5 +75,35 @@
           <% } %>
         </ul>
       </div>
+
+      <!-- Mobile Menu Dropdown -->
+      <div id="mobile-menu" class="mobile-menu md:hidden mt-4">
+        <ul class="flex flex-col space-y-3 bg-burgundy bg-opacity-95 rounded-lg p-4 shadow-xl">
+          <li><a href="/" class="block text-cream hover:text-gold transition py-2 px-3 <%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'bg-gold bg-opacity-20 rounded' : '' %>">Forside</a></li>
+          <% if (typeof bruger !== 'undefined' && bruger) { %>
+            <li><a href="/browse" class="block text-cream hover:text-gold transition py-2 px-3 <%= typeof currentPage !== 'undefined' && currentPage === 'browse' ? 'bg-gold bg-opacity-20 rounded' : '' %>">Browse</a></li>
+            <li><a href="/favoritter" class="block text-cream hover:text-gold transition py-2 px-3 <%= typeof currentPage !== 'undefined' && currentPage === 'favoritter' ? 'bg-gold bg-opacity-20 rounded' : '' %>">❤️ Favoritter</a></li>
+            <li><a href="<%= bruger.rolle === 'admin' ? '/admin' : '/dashboard' %>" class="block text-cream hover:text-gold transition py-2 px-3 <%= typeof currentPage !== 'undefined' && currentPage === 'dashboard' ? 'bg-gold bg-opacity-20 rounded' : '' %>">Dashboard</a></li>
+            <li><a href="/logout" class="block text-cream hover:text-gold transition py-2 px-3">Log ud (<%= bruger.navn %>)</a></li>
+          <% } else { %>
+            <li><a href="/produkter" class="block text-cream hover:text-gold transition py-2 px-3 <%= typeof currentPage !== 'undefined' && currentPage === 'produkter' ? 'bg-gold bg-opacity-20 rounded' : '' %>">Produkter</a></li>
+            <li><a href="/login" class="block bg-gold text-gray-900 px-4 py-3 rounded font-semibold hover:bg-opacity-90 transition text-center">Log ind</a></li>
+          <% } %>
+        </ul>
+      </div>
     </nav>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('active');
+          // Change icon between hamburger and X
+          mobileMenuBtn.textContent = mobileMenu.classList.contains('active') ? '✕' : '☰';
+        });
+      }
+    </script>
   </header>
