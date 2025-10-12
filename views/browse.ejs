@@ -28,11 +28,17 @@
             <label class="block text-gray-700 font-semibold mb-2">Vælg fra dine forestillingsperioder:</label>
             <select id="periode-select" class="w-full px-4 py-2 border-2 border-burgundy rounded-lg focus:border-gold font-semibold">
               <option value="">-- Vælg en periode eller indtast manuelt nedenfor --</option>
-              <% forestillingsperioder.forEach(periode => { %>
-                <option value="<%= periode.fra_dato %>|<%= periode.til_dato %>" 
-                        data-fra="<%= periode.fra_dato %>" 
-                        data-til="<%= periode.til_dato %>">
-                  <%= periode.titel %> (<%= new Date(periode.fra_dato).toLocaleDateString('da-DK') %> - <%= new Date(periode.til_dato).toLocaleDateString('da-DK') %>)
+              <% forestillingsperioder.forEach(periode => { 
+                const fraDate = new Date(periode.fra_dato);
+                const tilDate = new Date(periode.til_dato);
+                // Format til YYYY-MM-DD for input[type="date"]
+                const fraFormatted = fraDate.toISOString().split('T')[0];
+                const tilFormatted = tilDate.toISOString().split('T')[0];
+              %>
+                <option value="<%= fraFormatted %>|<%= tilFormatted %>" 
+                        data-fra="<%= fraFormatted %>" 
+                        data-til="<%= tilFormatted %>">
+                  <%= periode.titel %> (<%= fraDate.toLocaleDateString('da-DK') %> - <%= tilDate.toLocaleDateString('da-DK') %>)
                 </option>
               <% }); %>
             </select>
@@ -68,8 +74,18 @@
             periodeSelect.addEventListener('change', function() {
               const selected = this.options[this.selectedIndex];
               if (selected.value) {
-                fraDato.value = selected.dataset.fra;
-                tilDato.value = selected.dataset.til;
+                const fraValue = selected.dataset.fra;
+                const tilValue = selected.dataset.til;
+                
+                console.log('Selected periode:', selected.text);
+                console.log('Fra dato value:', fraValue);
+                console.log('Til dato value:', tilValue);
+                
+                fraDato.value = fraValue;
+                tilDato.value = tilValue;
+                
+                console.log('Input fra-dato value after set:', fraDato.value);
+                console.log('Input til-dato value after set:', tilDato.value);
               }
             });
           }
