@@ -36,11 +36,15 @@ router.get('/', async (req, res) => {
     );
     const forestillingsperioder = perioderResult.rows;
     
-    // Hent alle reservationer hvis der søges med datoer
+    // Hent alle reservationer og alle ejeres forestillingsperioder hvis der søges med datoer
     let alleReservationer = [];
+    let alleForestillingsperioder = [];
     if (fraDato && tilDato) {
       const reservationerResult = await pool.query('SELECT * FROM reservationer');
       alleReservationer = reservationerResult.rows;
+      
+      const allePerioderResult = await pool.query('SELECT * FROM forestillingsperioder');
+      alleForestillingsperioder = allePerioderResult.rows;
     }
     
     // Tilføj teater information og tilgængelighed til hvert produkt
@@ -62,10 +66,10 @@ router.get('/', async (req, res) => {
         });
         
         // Tjek om ejeren har en forestillingsperiode der overlapper
-        const forestillingsperioder = ejer?.forestillingsperioder || [];
-        const ejerOptaget = forestillingsperioder.some(periode => {
-          const periodeFra = new Date(periode.fraDato);
-          const periodeTil = new Date(periode.tilDato);
+        const ejerForestillingsperioder = alleForestillingsperioder.filter(fp => fp.bruger_id === p.ejer_bruger_id);
+        const ejerOptaget = ejerForestillingsperioder.some(periode => {
+          const periodeFra = new Date(periode.fra_dato);
+          const periodeTil = new Date(periode.til_dato);
           return (søgFra <= periodeTil && søgTil >= periodeFra);
         });
         
