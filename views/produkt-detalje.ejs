@@ -24,8 +24,8 @@
   <main class="min-h-screen py-12 bg-cream">
     <div class="content-container">
       <!-- Back Button -->
-      <a href="/produkter" class="inline-block text-burgundy hover:text-gold transition mb-8 text-lg font-semibold cursor-pointer">
-        ← Tilbage til produkter
+      <a href="<%= bruger ? '/browse' : '/produkter' %>" class="inline-block text-burgundy hover:text-gold transition mb-8 text-lg font-semibold cursor-pointer">
+        ← Tilbage til <%= bruger ? 'browse' : 'produkter' %>
       </a>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
