@@ -35,7 +35,9 @@
     <div class="content-container py-20 relative z-20">
       <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl"><%= produkt.navn %></h2>
       <p class="text-2xl text-cream drop-shadow-lg"><%= produkt.beskrivelse %></p>
-      <p class="text-4xl font-bold text-gold mt-6 drop-shadow-lg"><%= produkt.pris %></p>
+      <% if (produkt.lokation) { %>
+        <p class="text-3xl font-bold text-gold mt-6 drop-shadow-lg">📍 <%= produkt.lokation %></p>
+      <% } %>
     </div>
   </section>
 

@@ -127,7 +127,11 @@
                 <h4 class="text-xl font-bold text-burgundy mb-2"><%= produkt.navn %></h4>
                 <p class="text-sm text-gray-500 mb-2">🏛️ <strong><%= ejer?.teaternavn || 'Ukendt teater' %></strong></p>
                 <p class="text-gray-600 text-sm mb-2"><%= produkt.beskrivelse.substring(0, 80) %>...</p>
-                <p class="text-lg font-bold text-gold mb-3"><%= produkt.pris %></p>
+                
+                <% if (produkt.lokation) { %>
+                  <p class="text-base font-semibold text-burgundy mb-3">📍 <%= produkt.lokation %></p>
+                <% } %>
+                
                 <form action="/admin/slet-produkt/<%= produkt.id %>" method="POST" onsubmit="return confirm('Er du sikker på at du vil slette dette produkt?');">
                   <button type="submit" class="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition font-semibold">
                     Slet Produkt

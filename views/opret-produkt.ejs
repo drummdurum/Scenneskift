@@ -56,15 +56,18 @@
           </div>
 
           <div>
-            <label for="pris" class="block text-gray-700 font-semibold mb-2 text-lg">Pris *</label>
-            <input 
-              type="text" 
-              id="pris" 
-              name="pris" 
+            <label for="lokation" class="block text-gray-700 font-semibold mb-2 text-lg">Lokation *</label>
+            <select 
+              id="lokation" 
+              name="lokation" 
               required
-              placeholder="F.eks. 350 kr/dag"
               class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none transition text-lg"
             >
+              <option value="">Vælg lokation</option>
+              <option value="Eget Lager">Eget Lager (Teatrets lager)</option>
+              <option value="Vores Lager">Vores Lager (Scenneskifts lager)</option>
+            </select>
+            <p class="text-sm text-gray-600 mt-2">Angiv hvor produktet opbevares</p>
           </div>
 
           <div>

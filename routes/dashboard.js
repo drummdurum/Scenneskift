@@ -51,16 +51,16 @@ router.get('/opret-produkt', (req, res) => {
 
 // Opret nyt produkt
 router.post('/opret-produkt', async (req, res) => {
-  const { navn, beskrivelse, pris, billede, størrelse, æra, type, maa_renoveres } = req.body;
+  const { navn, beskrivelse, lokation, billede, størrelse, æra, type, maa_renoveres } = req.body;
   
   try {
     await pool.query(
-      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori_størrelse, kategori_æra, kategori_type, maa_renoveres)
+      `INSERT INTO produkter (navn, beskrivelse, lokation, billede, ejer_bruger_id, skjult, kategori_størrelse, kategori_æra, kategori_type, maa_renoveres)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         navn,
         beskrivelse,
-        pris,
+        lokation,
         billede || '/images/placeholder.jpg',
         req.session.bruger.id,
         false,

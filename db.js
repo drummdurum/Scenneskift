@@ -73,6 +73,19 @@ async function initializeDatabase() {
       END $$;
     `);
 
+    // Add lokation column if it doesn't exist (for existing databases)
+    await client.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT FROM information_schema.columns 
+          WHERE table_name = 'produkter' AND column_name = 'lokation'
+        ) THEN
+          ALTER TABLE produkter ADD COLUMN lokation VARCHAR(255);
+        END IF;
+      END $$;
+    `);
+
     // Create reservationer table
     await client.query(`
       CREATE TABLE IF NOT EXISTS reservationer (
