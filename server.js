@@ -65,6 +65,15 @@ app.get('/', (req, res) => {
   res.render('index', { bruger: req.session.bruger });
 });
 
+// Redirect for opret-produkt (backward compatibility)
+app.get('/opret-produkt', (req, res) => {
+  res.redirect('/dashboard/opret-produkt');
+});
+
+app.post('/opret-produkt', (req, res) => {
+  res.redirect(307, '/dashboard/opret-produkt');
+});
+
 // Mount routes
 app.use('/', authRoutes);                              // /login, /logout, /registrer
 app.use('/produkter', productRoutes);                  // /produkter, /produkter/:id

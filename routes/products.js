@@ -36,12 +36,15 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('Produkt ikke fundet');
     }
     
-    // Hent ejer information
-    const ejerResult = await pool.query(
-      'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
-      [produkt.ejer_bruger_id]
-    );
-    const ejer = ejerResult.rows[0];
+    // Hent ejer information (kan være null hvis bruger er slettet)
+    let ejer = null;
+    if (produkt.ejer_bruger_id) {
+      const ejerResult = await pool.query(
+        'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+        [produkt.ejer_bruger_id]
+      );
+      ejer = ejerResult.rows[0] || null;
+    }
     
     // Hent reservationer for dette produkt fra reservationer tabel
     const reservationerResult = await pool.query(
@@ -59,13 +62,15 @@ router.get('/:id', async (req, res) => {
     
     res.render('produkt-detalje', { 
       produkt, 
-      ejer,
+      ejer: ejer || {},
       bruger: req.session.bruger, 
       fejl: null, 
       success: null 
     });
   } catch (error) {
     console.error('❌ Fejl ved hentning af produkt:', error);
+    console.error('Error details:', error.message);
+    console.error('Stack:', error.stack);
     res.status(500).send('Der opstod en fejl');
   }
 });
@@ -96,8 +101,19 @@ router.post('/:id/reserver', async (req, res) => {
     const til = new Date(tilDato);
     
     if (fra >= til) {
+      // Hent ejer information
+      let ejer = null;
+      if (produkt.ejer_bruger_id) {
+        const ejerResult = await pool.query(
+          'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+          [produkt.ejer_bruger_id]
+        );
+        ejer = ejerResult.rows[0] || null;
+      }
+      
       return res.render('produkt-detalje', { 
         produkt, 
+        ejer: ejer || {},
         bruger: req.session.bruger, 
         fejl: 'Til-dato skal være efter fra-dato', 
         success: null 
@@ -117,8 +133,19 @@ router.post('/:id/reserver', async (req, res) => {
     );
 
     if (konfliktCheck.rows.length > 0) {
+      // Hent ejer information
+      let ejer = null;
+      if (produkt.ejer_bruger_id) {
+        const ejerResult = await pool.query(
+          'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+          [produkt.ejer_bruger_id]
+        );
+        ejer = ejerResult.rows[0] || null;
+      }
+      
       return res.render('produkt-detalje', { 
         produkt, 
+        ejer: ejer || {},
         bruger: req.session.bruger, 
         fejl: 'Produktet er allerede reserveret i denne periode', 
         success: null 
@@ -154,8 +181,19 @@ router.post('/:id/reserver', async (req, res) => {
       teaternavn: r.teaternavn
     }));
 
+    // Hent ejer information
+    let ejer = null;
+    if (opdateretProdukt.ejer_bruger_id) {
+      const ejerResult = await pool.query(
+        'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+        [opdateretProdukt.ejer_bruger_id]
+      );
+      ejer = ejerResult.rows[0] || null;
+    }
+
     res.render('produkt-detalje', { 
       produkt: opdateretProdukt, 
+      ejer: ejer || {},
       bruger: req.session.bruger, 
       fejl: null, 
       success: 'Produkt reserveret!' 
@@ -173,6 +211,16 @@ router.post('/:id/reserver', async (req, res) => {
       
       const produkt = result.rows[0];
       
+      // Hent ejer information
+      let ejer = null;
+      if (produkt.ejer_bruger_id) {
+        const ejerResult = await pool.query(
+          'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+          [produkt.ejer_bruger_id]
+        );
+        ejer = ejerResult.rows[0] || null;
+      }
+      
       // Hent reservationer
       const reservationerResult = await pool.query(
         'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
@@ -188,6 +236,7 @@ router.post('/:id/reserver', async (req, res) => {
       
       res.render('produkt-detalje', { 
         produkt: produkt, 
+        ejer: ejer || {},
         bruger: req.session.bruger, 
         fejl: 'Der opstod en fejl ved reservation. Prøv igen.', 
         success: null 
