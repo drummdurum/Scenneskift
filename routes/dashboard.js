@@ -14,15 +14,29 @@ router.get('/', async (req, res) => {
       [req.session.bruger.id]
     );
     
+    // Hent kommende reservationer for brugerens produkter
+    const reservationerResult = await pool.query(`
+      SELECT r.*, p.navn as produkt_navn, p.billede as produkt_billede, 
+             b.teaternavn as lejer_teaternavn, b.lokation as lejer_lokation
+      FROM reservationer r
+      JOIN produkter p ON r.produkt_id = p.id
+      JOIN brugere b ON r.bruger_id = b.id
+      WHERE p.ejer_bruger_id = $1 
+        AND r.til_dato >= CURRENT_DATE
+      ORDER BY r.fra_dato ASC
+    `, [req.session.bruger.id]);
+    
     res.render('dashboard', { 
       bruger: req.session.bruger, 
-      produkter: result.rows 
+      produkter: result.rows,
+      reservationer: reservationerResult.rows
     });
   } catch (error) {
     console.error('❌ Fejl ved hentning af brugerens produkter:', error);
     res.render('dashboard', { 
       bruger: req.session.bruger, 
-      produkter: [] 
+      produkter: [],
+      reservationer: []
     });
   }
 });
@@ -38,12 +52,12 @@ router.get('/opret-produkt', (req, res) => {
 
 // Opret nyt produkt
 router.post('/opret-produkt', async (req, res) => {
-  const { navn, beskrivelse, pris, billede, størrelse, æra, type } = req.body;
+  const { navn, beskrivelse, pris, billede, størrelse, æra, type, maa_renoveres } = req.body;
   
   try {
     await pool.query(
-      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori, reservationer)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori, reservationer, maa_renoveres)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         navn,
         beskrivelse,
@@ -52,7 +66,8 @@ router.post('/opret-produkt', async (req, res) => {
         req.session.bruger.id,
         false,
         JSON.stringify({ størrelse, æra, type }),
-        JSON.stringify([])
+        JSON.stringify([]),
+        maa_renoveres === 'true'
       ]
     );
     

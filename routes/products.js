@@ -36,6 +36,13 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('Produkt ikke fundet');
     }
     
+    // Hent ejer information
+    const ejerResult = await pool.query(
+      'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+      [produkt.ejer_bruger_id]
+    );
+    const ejer = ejerResult.rows[0];
+    
     // Hent reservationer for dette produkt fra reservationer tabel
     const reservationerResult = await pool.query(
       'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
@@ -52,6 +59,7 @@ router.get('/:id', async (req, res) => {
     
     res.render('produkt-detalje', { 
       produkt, 
+      ejer,
       bruger: req.session.bruger, 
       fejl: null, 
       success: null 
@@ -218,6 +226,70 @@ router.post('/:id/skjul', async (req, res) => {
   } catch (error) {
     console.error('❌ Fejl ved skjul/vis produkt:', error);
     res.redirect('/dashboard');
+  }
+});
+
+// Send kontakt/forespørgsel om produkt
+router.post('/:id/kontakt', async (req, res) => {
+  if (!req.session.bruger) {
+    return res.redirect('/login');
+  }
+
+  const produktId = parseInt(req.params.id);
+  const { emne, besked } = req.body;
+
+  try {
+    // Hent produkt og ejer info
+    const produktResult = await pool.query(
+      'SELECT p.*, b.email as ejer_email, b.teaternavn as ejer_teaternavn FROM produkter p JOIN brugere b ON p.ejer_bruger_id = b.id WHERE p.id = $1',
+      [produktId]
+    );
+
+    const produkt = produktResult.rows[0];
+
+    if (!produkt) {
+      return res.status(404).send('Produkt ikke fundet');
+    }
+
+    // I en rigtig app ville du sende en email her
+    // For nu logger vi bare beskeden
+    console.log('📧 Forespørgsel sendt:');
+    console.log('Til:', produkt.ejer_email, '(' + produkt.ejer_teaternavn + ')');
+    console.log('Fra:', req.session.bruger.email || 'Ingen email', '(' + req.session.bruger.teaternavn + ')');
+    console.log('Emne:', emne);
+    console.log('Besked:', besked);
+    console.log('---');
+
+    // Hent ejer information for at vise siden igen
+    const ejerResult = await pool.query(
+      'SELECT id, teaternavn, email, lokation FROM brugere WHERE id = $1',
+      [produkt.ejer_bruger_id]
+    );
+    const ejer = ejerResult.rows[0];
+
+    // Hent reservationer
+    const reservationerResult = await pool.query(
+      'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
+      [produktId]
+    );
+
+    produkt.reservationer = reservationerResult.rows.map(r => ({
+      fraDato: r.fra_dato,
+      tilDato: r.til_dato,
+      bruger: r.bruger,
+      teaternavn: r.teaternavn
+    }));
+
+    res.render('produkt-detalje', {
+      produkt,
+      ejer,
+      bruger: req.session.bruger,
+      fejl: null,
+      success: 'Din forespørgsel er sendt til ' + produkt.ejer_teaternavn + '! De vil kontakte dig på din email.'
+    });
+  } catch (error) {
+    console.error('❌ Fejl ved afsendelse af forespørgsel:', error);
+    res.status(500).send('Der opstod en fejl');
   }
 });
 

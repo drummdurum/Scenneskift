@@ -24,8 +24,8 @@ const BrugerDB = {
   async create(brugerData) {
     const result = await pool.query(`
       INSERT INTO brugere (
-        brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, points, favoritter
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, email, points, favoritter
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
       RETURNING *
     `, [
       brugerData.brugernavn,
@@ -36,6 +36,7 @@ const BrugerDB = {
       brugerData.type,
       brugerData.teaternavn,
       brugerData.lokation,
+      brugerData.email,
       brugerData.points || 0,
       brugerData.favoritter || []
     ]);

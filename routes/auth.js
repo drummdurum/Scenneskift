@@ -94,7 +94,7 @@ router.get('/registrer', (req, res) => {
 
 // Registrer handling
 router.post('/registrer', async (req, res) => {
-  const { brugernavn, password, navn, teaternavn, lokation } = req.body;
+  const { brugernavn, password, navn, teaternavn, lokation, email } = req.body;
   
   try {
     // Tjek om brugernavnet allerede findes
@@ -110,11 +110,24 @@ router.post('/registrer', async (req, res) => {
       });
     }
     
+    // Tjek om emailen allerede findes
+    const existingEmail = await pool.query(
+      'SELECT * FROM brugere WHERE email = $1',
+      [email]
+    );
+    
+    if (existingEmail.rows.length > 0) {
+      return res.render('registrer', { 
+        fejl: 'Email er allerede i brug', 
+        success: null 
+      });
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
     
     await pool.query(
-      `INSERT INTO brugere (brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, favoritter)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `INSERT INTO brugere (brugernavn, password, rolle, aktiv, navn, type, teaternavn, lokation, email, favoritter)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         brugernavn,
         hashedPassword,
@@ -124,6 +137,7 @@ router.post('/registrer', async (req, res) => {
         'teater',
         teaternavn || navn,
         lokation,
+        email,
         [] // PostgreSQL array format for favoritter
       ]
     );

@@ -1,208 +1,237 @@
 <%- include('partials/header', { bruger, currentPage: 'tilkøb', title: 'Tilkøb' }) %>
 
   <!-- Hero Section -->
-  <section class="relative text-white min-h-[70vh] flex items-center overflow-hidden" style="background-image: url('/images/hero/theater-1308794_1280.webp'); background-size: cover; background-position: center; background-repeat: no-repeat; margin-top: -80px; padding-top: 80px;">
-    <!-- Dark overlay for better text readability -->
-    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
-    
-    <div class="content-container py-20 relative z-20">
-        <div class="text-center">
-      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl">📦 Tilkøb & Services</h2>
-      <p class="text-2xl text-cream drop-shadow-lg">Gør din leje endnu mere bekvem med vores tilkøb</p>
+  <section class="bg-white py-16 border-b border-gray-200">
+    <div class="content-container">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-5xl font-bold text-burgundy mb-4">Tilkøb & Services</h1>
+        <p class="text-xl text-gray-600 leading-relaxed">Vi tilbyder praktiske services som transport og forsikring for at gøre din leje så tryg og bekvem som muligt.</p>
+      </div>
     </div>
-</div>
   </section>
 
   <!-- Main Content -->
-  <main class="min-h-screen py-12 bg-cream">
+  <main class="min-h-screen py-12 bg-white">
     <div class="content-container">
 
       <!-- Services Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
         
         <!-- Transport Service -->
-        <div class="bg-white rounded-lg shadow-xl border-4 border-gold overflow-hidden hover:shadow-2xl transition flex flex-col">
-          <div class="bg-gradient-to-br from-blue-600 to-blue-800 p-6 text-white">
-            <div class="text-5xl mb-3">🚚</div>
-            <h3 class="text-2xl font-bold mb-2">Tilkøb af Transport</h3>
-            <p class="text-blue-100 text-sm">Få dine rekvisitter leveret direkte til døren</p>
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
+          <div class="bg-burgundy p-6 text-white">
+            <h3 class="text-2xl font-bold mb-2">Transport</h3>
+            <p class="text-gray-100">Vi leverer og henter rekvisitterne direkte hos dig</p>
           </div>
           
           <div class="p-6 flex-grow flex flex-col">
-            <h4 class="text-xl font-bold text-burgundy mb-3">Sådan fungerer det:</h4>
-            <ul class="space-y-2 mb-4 flex-grow">
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Vi henter og leverer til din adresse</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Professionel håndtering af rekvisitter</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Fleksible afhentnings- og leveringstider</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Returhentning inkluderet</span>
-              </li>
-            </ul>
-
-            <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 mb-4">
-              <h5 class="font-bold text-blue-900 mb-2 text-sm">📍 Priser:</h5>
-              <ul class="text-blue-800 space-y-1 text-xs">
-                <li>• København og omegn: <strong>250 kr</strong></li>
-                <li>• Sjælland: <strong>400 kr</strong></li>
-                <li>• Fyn: <strong>600 kr</strong></li>
-                <li>• Jylland: <strong>800 kr</strong></li>
-                <li>• Store/tunge genstande: <strong>+200 kr</strong></li>
-              </ul>
-            </div>
-
-            <div class="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-3 mb-4">
-              <p class="text-xs text-gray-700">
-                <strong>💡 Tip:</strong> Book transport minimum 48 timer før afhentning for at sikre tilgængelighed
+            <div class="mb-6">
+              <p class="text-gray-700 leading-relaxed mb-4">
+                Spar tid og kræfter ved at lade os håndtere transporten af dine rekvisitter. Vi sørger for sikker levering til din lokation og henter genstandene igen, når lejeperioden er slut.
               </p>
             </div>
 
-            <a href="/konsultation" class="block text-center bg-blue-600 text-white py-3 px-4 rounded-lg font-bold hover:bg-blue-700 transition text-sm mt-auto">
-              📞 Kontakt os for transport
+            <h4 class="text-lg font-bold text-burgundy mb-3">Hvad indeholder transport-servicen?</h4>
+            <ul class="space-y-3 mb-6 flex-grow">
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Levering til din adresse:</strong>
+                  <span class="text-gray-700"> Vi bringer rekvisitterne direkte til den aftalte lokation</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Professionel håndtering:</strong>
+                  <span class="text-gray-700"> Vores erfarne medarbejdere sikrer, at genstandene transporteres omhyggeligt</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Fleksible tider:</strong>
+                  <span class="text-gray-700"> Vi tilpasser levering og afhentning efter dit behov</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Returhentning inkluderet:</strong>
+                  <span class="text-gray-700"> Vi henter rekvisitterne igen, når lejeperioden udløber</span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+              <h5 class="font-bold text-gray-900 mb-3">Priser for transport:</h5>
+              <ul class="text-gray-700 space-y-2">
+                <li class="flex justify-between">
+                  <span>København og omegn:</span>
+                  <strong>250 kr</strong>
+                </li>
+                <li class="flex justify-between">
+                  <span>Sjælland:</span>
+                  <strong>400 kr</strong>
+                </li>
+                <li class="flex justify-between">
+                  <span>Fyn:</span>
+                  <strong>600 kr</strong>
+                </li>
+                <li class="flex justify-between">
+                  <span>Jylland:</span>
+                  <strong>800 kr</strong>
+                </li>
+                <li class="flex justify-between border-t border-gray-300 pt-2 mt-2">
+                  <span>Tillæg for store/tunge genstande:</span>
+                  <strong>+200 kr</strong>
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+              <p class="text-sm text-gray-700">
+                <strong class="text-gray-900">Vigtigt at vide:</strong> Book transport minimum 48 timer før ønsket leveringstidspunkt for at sikre tilgængelighed. Ved specielle behov kan vi ofte tilbyde løsninger med kortere varsel - kontakt os for at høre nærmere.
+              </p>
+            </div>
+
+            <a href="/konsultation" class="block text-center bg-burgundy text-white py-3 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition mt-auto">
+              Kontakt os om transport
             </a>
           </div>
         </div>
 
         <!-- Insurance Service -->
-        <div class="bg-white rounded-lg shadow-xl border-4 border-gold overflow-hidden hover:shadow-2xl transition flex flex-col">
-          <div class="bg-gradient-to-br from-green-600 to-green-800 p-6 text-white">
-            <div class="text-5xl mb-3">🛡️</div>
-            <h3 class="text-2xl font-bold mb-2">Tilkøb af Forsikring</h3>
-            <p class="text-green-100 text-sm">Beskyt dig mod uforudsete hændelser</p>
+        <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition flex flex-col">
+          <div class="bg-burgundy p-6 text-white">
+            <h3 class="text-2xl font-bold mb-2">Forsikring</h3>
+            <p class="text-gray-100">Beskyt dig mod uforudsete hændelser under lejeperioden</p>
           </div>
           
           <div class="p-6 flex-grow flex flex-col">
-            <h4 class="text-xl font-bold text-burgundy mb-3">Hvad er dækket:</h4>
-            <ul class="space-y-2 mb-4 flex-grow">
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Skader under transport og brug</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Tyveri under lejeperioden</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Uforudsete ulykker på scenen</span>
-              </li>
-              <li class="flex items-start">
-                <span class="text-gold text-lg mr-2">✓</span>
-                <span class="text-gray-700 text-sm">Ingen selvrisiko ved mindre skader</span>
-              </li>
-            </ul>
-
-            <div class="bg-green-50 border-2 border-green-300 rounded-lg p-3 mb-4">
-              <h5 class="font-bold text-green-900 mb-2 text-sm">💰 Priser:</h5>
-              <ul class="text-green-800 space-y-1 text-xs">
-                <li>• Standardforsikring: <strong>10% af lejeværdi</strong></li>
-                <li>• Premium forsikring: <strong>15% af lejeværdi</strong></li>
-                <li>• Minimum pris: <strong>50 kr/dag</strong></li>
-              </ul>
-              <p class="text-xs text-gray-600 mt-2">Premium inkluderer udvidet dækning og 0 kr selvrisiko</p>
-            </div>
-
-            <div class="bg-red-50 border-2 border-red-300 rounded-lg p-3 mb-4">
-              <p class="text-xs text-gray-700">
-                <strong>⚠️ Bemærk:</strong> Uden forsikring hæfter lejer for den fulde værdi ved skader eller tab
+            <div class="mb-6">
+              <p class="text-gray-700 leading-relaxed mb-4">
+                Med vores forsikring er du dækket, hvis der skulle ske utilsigtede skader eller tab under lejeperioden. Det giver dig ro i sindet til at fokusere på din forestilling eller produktion.
               </p>
             </div>
 
-            <a href="/konsultation" class="block text-center bg-green-600 text-white py-3 px-4 rounded-lg font-bold hover:bg-green-700 transition text-sm mt-auto">
-              📋 Læs mere om forsikring
+            <h4 class="text-lg font-bold text-burgundy mb-3">Hvad dækker forsikringen?</h4>
+            <ul class="space-y-3 mb-6 flex-grow">
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Skader under transport og brug:</strong>
+                  <span class="text-gray-700"> Hvis rekvisitterne beskadiges under levering, opstilling eller brug</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Tyveri:</strong>
+                  <span class="text-gray-700"> Hvis rekvisitter stjæles under lejeperioden</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Uforudsete ulykker:</strong>
+                  <span class="text-gray-700"> Hvis der sker uheld på scenen eller under håndtering</span>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <span class="text-burgundy font-bold mr-3 flex-shrink-0">•</span>
+                <div>
+                  <strong class="text-gray-900">Reduceret selvrisiko:</strong>
+                  <span class="text-gray-700"> Ved mindre skader har du ingen eller lav selvrisiko</span>
+                </div>
+              </li>
+            </ul>
+
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+              <h5 class="font-bold text-gray-900 mb-3">Forsikringspakker:</h5>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between items-baseline mb-1">
+                    <strong class="text-gray-900">Standardforsikring</strong>
+                    <strong>10% af lejeværdi</strong>
+                  </div>
+                  <p class="text-sm text-gray-600">Dækker skader og tab med moderat selvrisiko</p>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                  <div class="flex justify-between items-baseline mb-1">
+                    <strong class="text-gray-900">Premium forsikring</strong>
+                    <strong>15% af lejeværdi</strong>
+                  </div>
+                  <p class="text-sm text-gray-600">Fuld dækning uden selvrisiko - anbefales til dyre eller skrøbelige genstande</p>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                  <p class="text-sm text-gray-700">Minimum pris: <strong>50 kr/dag</strong></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <p class="text-sm text-gray-700">
+                <strong class="text-gray-900">Vigtigt:</strong> Uden forsikring hæfter du for rekvisitternes fulde værdi ved skader eller tab. Vi anbefaler derfor altid at tegne forsikring, især ved dyre eller følsomme genstande.
+              </p>
+            </div>
+
+            <a href="/konsultation" class="block text-center bg-burgundy text-white py-3 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition mt-auto">
+              Læs mere om forsikring
             </a>
           </div>
         </div>
 
       </div>
 
-      <!-- Combined Package -->
-      <div class="bg-gradient-to-br from-burgundy to-gray-900 text-white rounded-lg shadow-xl p-8 border-4 border-gold">
-        <div class="text-center mb-6">
-          <div class="text-6xl mb-4">🎁</div>
-          <h3 class="text-4xl font-bold mb-2">Komplet Pakke</h3>
-          <p class="text-xl text-cream">Få både transport og forsikring med rabat</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div class="bg-white/10 rounded-lg p-6 text-center">
-            <div class="text-3xl mb-2">🚚</div>
-            <h4 class="font-bold mb-2">Transport</h4>
-            <p class="text-sm text-cream">Levering og afhentning</p>
-          </div>
-          <div class="bg-white/10 rounded-lg p-6 text-center">
-            <div class="text-3xl mb-2">+</div>
-          </div>
-          <div class="bg-white/10 rounded-lg p-6 text-center">
-            <div class="text-3xl mb-2">🛡️</div>
-            <h4 class="font-bold mb-2">Forsikring</h4>
-            <p class="text-sm text-cream">Fuld tryghed</p>
-          </div>
-        </div>
-
-        <div class="bg-gold text-gray-900 rounded-lg p-6 text-center mb-6">
-          <p class="text-3xl font-bold mb-2">Spar 15%</p>
-          <p class="text-lg">Når du tilkøber begge services sammen</p>
-        </div>
-
-        <div class="text-center">
-          <a href="/konsultation" class="inline-block bg-gold text-gray-900 py-4 px-8 rounded-lg font-bold text-lg hover:bg-opacity-90 transition shadow-lg">
-            💬 Book komplet pakke
-          </a>
-        </div>
-      </div>
-
+      
       <!-- FAQ Section -->
-      <div class="mt-12 bg-white rounded-lg shadow-xl p-8 border-2 border-gold">
-        <h3 class="text-3xl font-bold text-burgundy mb-6 text-center">❓ Ofte stillede spørgsmål</h3>
+      <div class="mt-12 bg-gray-50 rounded-lg shadow-md p-8 border border-gray-200">
+        <h3 class="text-3xl font-bold text-burgundy mb-6 text-center">Ofte stillede spørgsmål</h3>
         
-        <div class="space-y-4">
-          <div class="border-b border-gray-200 pb-4">
-            <h4 class="font-bold text-burgundy mb-2">Hvordan bestiller jeg transport?</h4>
-            <p class="text-gray-700">Kontakt os via konsultations-siden eller nævn det i din reservationsbesked. Vi koordinerer tidspunkter med dig.</p>
+        <div class="space-y-6 max-w-4xl mx-auto">
+          <div class="border-b border-gray-300 pb-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Hvordan bestiller jeg transport?</h4>
+            <p class="text-gray-700 leading-relaxed">Du kan bestille transport ved at kontakte os via vores konsultations-side, hvor du kan beskrive dine behov og ønsker. Du kan også nævne det direkte i din reservationsbesked. Vi vil herefter koordinere leveringstidspunkter med dig, så det passer til din tidsplan.</p>
           </div>
 
-          <div class="border-b border-gray-200 pb-4">
-            <h4 class="font-bold text-burgundy mb-2">Kan jeg få transport samme dag?</h4>
-            <p class="text-gray-700">Ved akut behov kan vi nogle gange levere samme dag. Kontakt os direkte på telefon for at høre om muligheder.</p>
+          <div class="border-b border-gray-300 pb-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Kan jeg få transport med kort varsel?</h4>
+            <p class="text-gray-700 leading-relaxed">Vi anbefaler at booke transport minimum 48 timer i forvejen. Ved akutte situationer eller korte varsler kan vi dog nogle gange levere samme dag eller næste dag. Kontakt os direkte på telefon for at høre om muligheder - vi gør vores bedste for at finde en løsning.</p>
           </div>
 
-          <div class="border-b border-gray-200 pb-4">
-            <h4 class="font-bold text-burgundy mb-2">Hvad sker hvis noget går i stykker?</h4>
-            <p class="text-gray-700">Med forsikring dækkes skader og tab. Uden forsikring skal du erstatte genstandens værdi. Vi anbefaler altid forsikring ved dyre eller skrøbelige rekvisitter.</p>
+          <div class="border-b border-gray-300 pb-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Hvad sker der, hvis noget beskadiges under lejeperioden?</h4>
+            <p class="text-gray-700 leading-relaxed">Hvis du har tegnet forsikring, dækker den skader og tab i henhold til de valgte vilkår. Uden forsikring skal du betale for reparation eller erstatning af genstandens fulde værdi. Vi anbefaler derfor altid at tegne forsikring, især ved dyre, antikke eller skrøbelige rekvisitter.</p>
           </div>
 
-          <div class="border-b border-gray-200 pb-4">
-            <h4 class="font-bold text-burgundy mb-2">Er forsikringen obligatorisk?</h4>
-            <p class="text-gray-700">Nej, men stærkt anbefalet. Du hæfter altid for genstandens værdi ved skader eller tab.</p>
+          <div class="border-b border-gray-300 pb-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Er forsikringen obligatorisk?</h4>
+            <p class="text-gray-700 leading-relaxed">Nej, forsikring er ikke obligatorisk, men vi anbefaler det stærkt. Du hæfter altid for genstandenes værdi ved skader eller tab, så forsikringen giver dig økonomisk tryghed og ro i sindet under hele lejeperioden.</p>
           </div>
 
-          <div class="pb-4">
-            <h4 class="font-bold text-burgundy mb-2">Kan jeg afbestille transport eller forsikring?</h4>
-            <p class="text-gray-700">Ja, helt op til 24 timer før afhentning kan du afbestille uden gebyr. Kontakt os hurtigst muligt.</p>
+          <div class="pb-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Kan jeg afbestille transport eller forsikring?</h4>
+            <p class="text-gray-700 leading-relaxed">Ja, du kan afbestille transport eller forsikring helt op til 24 timer før planlagt levering uden ekstra gebyr. Kontakt os hurtigst muligt, hvis dine planer ændrer sig, så kan vi justere din bestilling.</p>
+          </div>
+
+          <div class="border-t border-gray-300 pt-6">
+            <h4 class="font-bold text-burgundy mb-2 text-lg">Hvad hvis jeg har andre spørgsmål?</h4>
+            <p class="text-gray-700 leading-relaxed">Har du spørgsmål, som ikke er besvaret her, er du altid velkommen til at kontakte os. Vi rådgiver gerne om den bedste løsning til dit konkrete projekt.</p>
           </div>
         </div>
       </div>
 
       <!-- Contact CTA -->
-      <div class="mt-8 text-center bg-gradient-to-r from-burgundy to-gold text-white rounded-lg p-8 shadow-xl">
-        <h3 class="text-3xl font-bold mb-4">Har du spørgsmål?</h3>
-        <p class="text-xl mb-6">Vi hjælper dig gerne med at finde den rigtige løsning</p>
+      <div class="mt-8 text-center bg-burgundy text-white rounded-lg p-8 shadow-md">
+        <h3 class="text-3xl font-bold mb-4">Har du spørgsmål til vores services?</h3>
+        <p class="text-lg mb-6 text-gray-100">Vi hjælper dig gerne med at finde den rigtige løsning til dit projekt</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/konsultation" class="bg-white text-burgundy py-3 px-8 rounded-lg font-bold hover:bg-cream transition">
-            💬 Book konsultation
+          <a href="/konsultation" class="bg-white text-burgundy py-3 px-8 rounded-lg font-semibold hover:bg-gray-100 transition">
+            Book konsultation
           </a>
-          <a href="tel:+4512345678" class="bg-white text-burgundy py-3 px-8 rounded-lg font-bold hover:bg-cream transition">
-            📞 Ring til os
+          <a href="tel:+4512345678" class="bg-white text-burgundy py-3 px-8 rounded-lg font-semibold hover:bg-gray-100 transition">
+            Ring til os
           </a>
         </div>
       </div>

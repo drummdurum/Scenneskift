@@ -151,6 +151,7 @@
             <label class="block text-gray-700 font-semibold mb-2">Lokation</label>
             <select id="filterLokation" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-burgundy">
               <option value="">Alle lokationer</option>
+              <option value="VORES_LAGER">🏢 Vores Lager</option>
               <option value="København">København</option>
               <option value="Aarhus">Aarhus</option>
               <option value="Odense">Odense</option>
@@ -183,7 +184,8 @@
                  data-størrelse="<%= produkt.kategori?.størrelse || '' %>"
                  data-æra="<%= produkt.kategori?.æra || '' %>"
                  data-type="<%= produkt.kategori?.type || '' %>"
-                 data-lokation="<%= produkt.teaterLokation || '' %>">
+                 data-lokation="<%= produkt.teaterLokation || '' %>"
+                 data-ejer-lager="<%= produkt.erEgetLager ? 'true' : 'false' %>">
               <!-- Product Image -->
               <div class="h-64 bg-gradient-to-br from-burgundy to-gray-900 flex items-center justify-center border-b-4 border-gold relative overflow-hidden">
                 <span class="text-8xl opacity-30">🎭</span>
@@ -258,7 +260,14 @@
         const matchStørrelse = !størrelse || card.dataset.størrelse === størrelse;
         const matchÆra = !æra || card.dataset.æra === æra;
         const matchType = !type || card.dataset.type === type;
-        const matchLokation = !lokation || card.dataset.lokation === lokation;
+        
+        // Special handling for "Vores Lager"
+        let matchLokation = true;
+        if (lokation === 'VORES_LAGER') {
+          matchLokation = card.dataset.ejerLager === 'true';
+        } else if (lokation) {
+          matchLokation = card.dataset.lokation === lokation;
+        }
         
         if (matchStørrelse && matchÆra && matchType && matchLokation) {
           card.style.display = 'block';

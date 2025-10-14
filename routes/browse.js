@@ -12,10 +12,9 @@ router.get('/', async (req, res) => {
     const fraDato = req.query.fraDato;
     const tilDato = req.query.tilDato;
     
-    // Hent alle synlige produkter fra andre teatre
+    // Hent alle synlige produkter (inklusiv egne for "Vores Lager" filter)
     const produkterResult = await pool.query(
-      'SELECT * FROM produkter WHERE skjult = false AND ejer_bruger_id != $1 ORDER BY id',
-      [req.session.bruger.id]
+      'SELECT * FROM produkter WHERE skjult = false ORDER BY id'
     );
     
     // Hent alle brugere for teater information
@@ -80,7 +79,8 @@ router.get('/', async (req, res) => {
         ...p,
         teaterNavn: ejer ? ejer.teaternavn : 'Ukendt',
         teaterLokation: ejer ? ejer.lokation : 'Ukendt',
-        erLedig: erLedig
+        erLedig: erLedig,
+        erEgetLager: p.ejer_bruger_id === req.session.bruger.id
       };
     });
     
