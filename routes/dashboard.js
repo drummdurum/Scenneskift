@@ -14,6 +14,18 @@ router.get('/', async (req, res) => {
       [req.session.bruger.id]
     );
     
+    // Tilføj reservationer til hvert produkt
+    const produkter = await Promise.all(result.rows.map(async (produkt) => {
+      const resResult = await pool.query(
+        'SELECT * FROM reservationer WHERE produkt_id = $1 ORDER BY fra_dato',
+        [produkt.id]
+      );
+      return {
+        ...produkt,
+        reservationer: resResult.rows
+      };
+    }));
+    
     // Hent kommende reservationer for brugerens produkter (udlejet til andre)
     const reservationerResult = await pool.query(`
       SELECT r.*, p.navn as produkt_navn, p.billede as produkt_billede, 
@@ -40,7 +52,7 @@ router.get('/', async (req, res) => {
     
     res.render('dashboard', { 
       bruger: req.session.bruger, 
-      produkter: result.rows,
+      produkter: produkter,
       reservationer: reservationerResult.rows,
       mineReservationer: mineReservationerResult.rows
     });
