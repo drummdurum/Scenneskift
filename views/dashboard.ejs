@@ -133,8 +133,8 @@
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
                     <div>
                       <p class="font-semibold text-gray-900">Lejer:</p>
-                      <p><%= reservation.lejer_teaternavn %></p>
-                      <p class="text-sm text-gray-600"><%= reservation.lejer_lokation %></p>
+                      <p><%= reservation.lejer_teaternavn || 'Ukendt teater' %></p>
+                      <p class="text-sm text-gray-600"><%= reservation.bruger %></p>
                     </div>
                     
                     <div>

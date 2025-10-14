@@ -55,7 +55,9 @@ router.post('/login', async (req, res) => {
         brugernavn: bruger.brugernavn,
         rolle: bruger.rolle,
         navn: bruger.navn,
-        teaternavn: bruger.teaternavn
+        teaternavn: bruger.teaternavn,
+        email: bruger.email,
+        lokation: bruger.lokation
       };
       
       console.log('📝 Session oprettet:', req.session.bruger);

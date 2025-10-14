@@ -17,10 +17,9 @@ router.get('/', async (req, res) => {
     // Hent kommende reservationer for brugerens produkter
     const reservationerResult = await pool.query(`
       SELECT r.*, p.navn as produkt_navn, p.billede as produkt_billede, 
-             b.teaternavn as lejer_teaternavn, b.lokation as lejer_lokation
+             r.teaternavn as lejer_teaternavn
       FROM reservationer r
       JOIN produkter p ON r.produkt_id = p.id
-      JOIN brugere b ON r.bruger_id = b.id
       WHERE p.ejer_bruger_id = $1 
         AND r.til_dato >= CURRENT_DATE
       ORDER BY r.fra_dato ASC

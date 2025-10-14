@@ -22,10 +22,24 @@ async function initializeDatabase() {
         type VARCHAR(50) NOT NULL,
         teaternavn VARCHAR(255),
         lokation VARCHAR(255),
+        email VARCHAR(255),
         favoritter INTEGER[] DEFAULT '{}',
         points INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Add email column if it doesn't exist (for existing databases)
+    await client.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT FROM information_schema.columns 
+          WHERE table_name = 'brugere' AND column_name = 'email'
+        ) THEN
+          ALTER TABLE brugere ADD COLUMN email VARCHAR(255);
+        END IF;
+      END $$;
     `);
 
     // Create produkter table
@@ -38,11 +52,25 @@ async function initializeDatabase() {
         billede VARCHAR(500),
         ejer_bruger_id INTEGER REFERENCES brugere(id),
         skjult BOOLEAN DEFAULT false,
+        maa_renoveres BOOLEAN DEFAULT false,
         kategori_størrelse VARCHAR(50),
         kategori_æra VARCHAR(100),
         kategori_type VARCHAR(100),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Add maa_renoveres column if it doesn't exist (for existing databases)
+    await client.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT FROM information_schema.columns 
+          WHERE table_name = 'produkter' AND column_name = 'maa_renoveres'
+        ) THEN
+          ALTER TABLE produkter ADD COLUMN maa_renoveres BOOLEAN DEFAULT false;
+        END IF;
+      END $$;
     `);
 
     // Create reservationer table
