@@ -45,10 +45,13 @@ router.get('/', async (req, res) => {
       FROM reservationer r
       JOIN produkter p ON r.produkt_id = p.id
       JOIN brugere b ON p.ejer_bruger_id = b.id
-      WHERE r.bruger = $1
+      WHERE r.teaternavn = $1
         AND r.til_dato >= CURRENT_DATE
       ORDER BY r.til_dato ASC
     `, [req.session.bruger.teaternavn]);
+    
+    console.log('🔍 Søger efter reservationer for:', req.session.bruger.teaternavn);
+    console.log('📦 Fandt reservationer:', mineReservationerResult.rows.length);
     
     res.render('dashboard', { 
       bruger: req.session.bruger, 
