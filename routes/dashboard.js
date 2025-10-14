@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
       [req.session.bruger.id]
     );
     
-    // Hent kommende reservationer for brugerens produkter
+    // Hent kommende reservationer for brugerens produkter (udlejet til andre)
     const reservationerResult = await pool.query(`
       SELECT r.*, p.navn as produkt_navn, p.billede as produkt_billede, 
              r.teaternavn as lejer_teaternavn
@@ -25,17 +25,32 @@ router.get('/', async (req, res) => {
       ORDER BY r.fra_dato ASC
     `, [req.session.bruger.id]);
     
+    // Hent brugerens egne reservationer (produkter de har lejet)
+    const mineReservationerResult = await pool.query(`
+      SELECT r.*, p.navn as produkt_navn, p.billede as produkt_billede, 
+             p.lokation as produkt_lokation,
+             b.teaternavn as ejer_teaternavn, b.lokation as ejer_lokation
+      FROM reservationer r
+      JOIN produkter p ON r.produkt_id = p.id
+      JOIN brugere b ON p.ejer_bruger_id = b.id
+      WHERE r.bruger = $1
+        AND r.til_dato >= CURRENT_DATE
+      ORDER BY r.til_dato ASC
+    `, [req.session.bruger.teaternavn]);
+    
     res.render('dashboard', { 
       bruger: req.session.bruger, 
       produkter: result.rows,
-      reservationer: reservationerResult.rows
+      reservationer: reservationerResult.rows,
+      mineReservationer: mineReservationerResult.rows
     });
   } catch (error) {
     console.error('❌ Fejl ved hentning af brugerens produkter:', error);
     res.render('dashboard', { 
       bruger: req.session.bruger, 
       produkter: [],
-      reservationer: []
+      reservationer: [],
+      mineReservationer: []
     });
   }
 });

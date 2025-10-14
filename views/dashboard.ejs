@@ -181,6 +181,112 @@
       </div>
       <% } %>
 
+      <!-- Mine Reservationer (Produkter jeg har lejet) -->
+      <% if (mineReservationer && mineReservationer.length > 0) { %>
+      <div class="bg-white rounded-lg shadow-xl p-8 border-2 border-blue-500 mb-8">
+        <h3 class="text-3xl font-bold text-blue-700 mb-6">🎯 Produkter Jeg Har Reserveret</h3>
+        <p class="text-gray-700 mb-6">Rekvisitter du har lejet fra andre teatre</p>
+        
+        <div class="space-y-4">
+          <% mineReservationer.forEach(reservation => { 
+            const fraDato = new Date(reservation.fra_dato);
+            const tilDato = new Date(reservation.til_dato);
+            const idag = new Date();
+            idag.setHours(0, 0, 0, 0);
+            const erAktiv = idag >= fraDato && idag <= tilDato;
+            const erKommende = idag < fraDato;
+            const dageBack = Math.ceil((tilDato - idag) / (1000 * 60 * 60 * 24));
+            const snartAflevering = erAktiv && dageBack <= 3;
+          %>
+            <div class="border-2 <%= erAktiv ? (snartAflevering ? 'border-orange-500 bg-orange-50' : 'border-green-500 bg-green-50') : erKommende ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50' %> rounded-lg p-6">
+              <div class="flex flex-col md:flex-row gap-4">
+                <!-- Produkt billede -->
+                <% if (reservation.produkt_billede) { %>
+                  <img src="<%= reservation.produkt_billede %>" alt="<%= reservation.produkt_navn %>" 
+                       class="w-32 h-32 object-cover rounded-lg">
+                <% } else { %>
+                  <div class="w-32 h-32 bg-gray-200 rounded-lg flex items-center justify-center text-4xl">
+                    🎭
+                  </div>
+                <% } %>
+                
+                <!-- Reservation info -->
+                <div class="flex-grow">
+                  <div class="flex items-start justify-between mb-2">
+                    <h4 class="text-xl font-bold text-burgundy"><%= reservation.produkt_navn %></h4>
+                    <span class="px-3 py-1 rounded-full text-sm font-semibold 
+                           <%= erAktiv ? (snartAflevering ? 'bg-orange-600 text-white' : 'bg-green-600 text-white') : erKommende ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white' %>">
+                      <%= erAktiv ? (snartAflevering ? '⚠️ Snart aflever' : 'Aktiv leje') : erKommende ? 'Kommende' : 'Afsluttet' %>
+                    </span>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+                    <div>
+                      <p class="font-semibold text-gray-900">Ejer:</p>
+                      <p><%= reservation.ejer_teaternavn %></p>
+                      <% if (reservation.ejer_lokation) { %>
+                        <p class="text-sm text-gray-600">📍 <%= reservation.ejer_lokation %></p>
+                      <% } %>
+                    </div>
+                    
+                    <div>
+                      <p class="font-semibold text-gray-900">Lejeperiode:</p>
+                      <p class="text-sm">
+                        <strong>Fra:</strong> <%= fraDato.toLocaleDateString('da-DK') %><br>
+                        <strong>Til:</strong> <%= tilDato.toLocaleDateString('da-DK') %>
+                      </p>
+                      <p class="text-xs text-gray-600 mt-1">
+                        <%= Math.ceil((tilDato - fraDato) / (1000 * 60 * 60 * 24)) %> dage
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <% if (erAktiv) { %>
+                    <% if (snartAflevering) { %>
+                      <div class="mt-3 p-3 bg-orange-100 border-2 border-orange-400 rounded">
+                        <p class="text-sm font-bold text-orange-900">
+                          ⚠️ VIGTIGT: Skal afleveres om <%= dageBack %> dag<%= dageBack !== 1 ? 'e' : '' %>!
+                        </p>
+                        <p class="text-xs text-orange-700 mt-1">
+                          Husk at returnere produktet i samme stand
+                        </p>
+                      </div>
+                    <% } else { %>
+                      <div class="mt-3 p-3 bg-green-100 border border-green-300 rounded">
+                        <p class="text-sm font-semibold text-green-900">
+                          ✓ Du har produktet pt. • Skal afleveres om <%= dageBack %> dag<%= dageBack !== 1 ? 'e' : '' %>
+                        </p>
+                      </div>
+                    <% } %>
+                  <% } %>
+                  
+                  <% if (erKommende) { 
+                    const dageInd = Math.ceil((fraDato - idag) / (1000 * 60 * 60 * 24));
+                  %>
+                    <div class="mt-3 p-3 bg-blue-100 border border-blue-300 rounded">
+                      <p class="text-sm font-semibold text-blue-900">
+                        📅 Klar til afhentning om <%= dageInd %> dag<%= dageInd !== 1 ? 'e' : '' %>
+                      </p>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+              
+              <!-- Afleveringssted -->
+              <div class="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded">
+                <p class="text-sm text-gray-700">
+                  <strong>📍 Afleveringssted:</strong> <%= reservation.ejer_teaternavn %><%= reservation.ejer_lokation ? ', ' + reservation.ejer_lokation : '' %>
+                  <% if (reservation.produkt_lokation) { %>
+                    <span class="ml-2 text-xs bg-yellow-200 px-2 py-1 rounded"><%= reservation.produkt_lokation %></span>
+                  <% } %>
+                </p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+
       <!-- Product Overview -->
       <div class="bg-white rounded-lg shadow-xl p-8 border-2 border-gold">
         <h3 class="text-3xl font-bold text-burgundy mb-6">Mine Rekvisitter</h3>
