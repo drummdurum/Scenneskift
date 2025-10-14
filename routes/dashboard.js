@@ -55,8 +55,8 @@ router.post('/opret-produkt', async (req, res) => {
   
   try {
     await pool.query(
-      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori, reservationer, maa_renoveres)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      `INSERT INTO produkter (navn, beskrivelse, pris, billede, ejer_bruger_id, skjult, kategori_størrelse, kategori_æra, kategori_type, maa_renoveres)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         navn,
         beskrivelse,
@@ -64,8 +64,9 @@ router.post('/opret-produkt', async (req, res) => {
         billede || '/images/placeholder.jpg',
         req.session.bruger.id,
         false,
-        JSON.stringify({ størrelse, æra, type }),
-        JSON.stringify([]),
+        størrelse || null,
+        æra || null,
+        type || null,
         maa_renoveres === 'true'
       ]
     );
