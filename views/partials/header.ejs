@@ -4,6 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title : 'Teaterrekvisitter' %> - SceneSkift</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'SceneSkift - Din platform for udlejning af teaterrekvisitter og sceneudstyr. Find alt hvad du har brug for til din næste forestilling.' %>">
+  <meta name="keywords" content="teater, rekvisitter, udlejning, sceneudstyr, forestilling, teaterproduktion, scenografi">
+  <meta name="author" content="SceneSkift">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph Tags for Social Media -->
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'Teaterrekvisitter' %> - SceneSkift">
+  <meta property="og:description" content="<%= typeof description !== 'undefined' ? description : 'SceneSkift - Din platform for udlejning af teaterrekvisitter og sceneudstyr.' %>">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://scenneskift.com">
+  <meta property="og:site_name" content="SceneSkift">
+  <meta property="og:locale" content="da_DK">
+  
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'Teaterrekvisitter' %> - SceneSkift">
+  <meta name="twitter:description" content="<%= typeof description !== 'undefined' ? description : 'SceneSkift - Din platform for udlejning af teaterrekvisitter og sceneudstyr.' %>">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://scenneskift.com<%= typeof path !== 'undefined' ? path : '' %>">
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SceneSkift",
+    "url": "https://scenneskift.com",
+    "description": "SceneSkift - Din platform for udlejning af teaterrekvisitter og sceneudstyr. Find alt hvad du har brug for til din næste forestilling.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "DK"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": "Danish"
+    },
+    "sameAs": [],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://scenneskift.com/browse?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  
+  <% if (typeof currentPage !== 'undefined' && currentPage === 'home') { %>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SceneSkift",
+    "url": "https://scenneskift.com",
+    "description": "Udlejning af autentiske teaterrekvisitter til din næste forestilling. Vi bringer klassisk elegance og dramatisk atmosfære til enhver scene.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://scenneskift.com/browse?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <% } %>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {

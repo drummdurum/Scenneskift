@@ -62,7 +62,13 @@ const debugRoutes = require('./routes/debug');
 
 // Public routes
 app.get('/', (req, res) => {
-  res.render('index', { bruger: req.session.bruger });
+  res.render('index', { 
+    bruger: req.session.bruger,
+    title: 'Forside - Udlejning af Teaterrekvisitter',
+    description: 'SceneSkift - Din platform for udlejning af teaterrekvisitter og sceneudstyr. Find alt hvad du har brug for til din næste forestilling.',
+    path: '/',
+    currentPage: 'home'
+  });
 });
 
 // Redirect for opret-produkt (backward compatibility)
@@ -87,6 +93,69 @@ app.use('/forestillingsperioder', periodsRoutes);      // /forestillingsperioder
 app.use('/konsultation', consultationRoutes);          // /konsultation
 app.use('/tilkoeb', tilkoebRoutes);                    // /tilkoeb
 app.use('/debug-brugere', debugRoutes);                // /debug-brugere (KUN development)
+
+// SEO routes
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.sendFile(path.join(__dirname, 'public', 'robots.txt'));
+});
+
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const { pool } = require('./db');
+    
+    // Hent alle produkter til sitemap
+    const produkterResult = await pool.query('SELECT id, updated_at FROM produkter ORDER BY id');
+    
+    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://scenneskift.com/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://scenneskift.com/produkter</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://scenneskift.com/browse</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://scenneskift.com/konsultation</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+
+    // Tilføj alle produkter
+    produkterResult.rows.forEach(produkt => {
+      const lastmod = produkt.updated_at ? new Date(produkt.updated_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+      sitemap += `
+  <url>
+    <loc>https://scenneskift.com/produkter/${produkt.id}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+    });
+
+    sitemap += `
+</urlset>`;
+
+    res.type('application/xml');
+    res.send(sitemap);
+  } catch (error) {
+    console.error('Fejl ved generering af sitemap:', error);
+    res.status(500).send('Fejl ved generering af sitemap');
+  }
+});
 
 // Start server
 async function startServer() {
