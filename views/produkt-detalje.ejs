@@ -33,7 +33,7 @@
     <div class="absolute inset-0 bg-black bg-opacity-60"></div>
     
     <div class="content-container py-20 relative z-20">
-      <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl"><%= produkt.navn %></h2>
+  <h2 class="text-6xl font-bold text-gold mb-4 drop-shadow-2xl font-serif"><%= produkt.navn %></h2>
       <p class="text-2xl text-cream drop-shadow-lg"><%= produkt.beskrivelse %></p>
       <% if (produkt.lokation) { %>
         <p class="text-3xl font-bold text-gold mt-6 drop-shadow-lg">📍 <%= produkt.lokation %></p>
@@ -263,7 +263,7 @@
       }
       
       // Get reservations from server
-      const reservationer = <%- JSON.stringify(produkt.reservationer || []) %>;
+  var reservationer = JSON.parse('<%- JSON.stringify(produkt.reservationer || []) %>');
       console.log('Generating calendar with reservations:', reservationer);
       
       // Create month header with navigation
