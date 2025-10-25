@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: 'libra serif modern', serif;
+  font-family: 'libra serif modern';
   background-color: var(--cream);
   color: var(--dark);
   line-height: 1.6;
