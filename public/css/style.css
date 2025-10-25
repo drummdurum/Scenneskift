@@ -12,11 +12,20 @@
   --shadow: rgba(0, 0, 0, 0.3);
 }
 
+
 body {
-  font-family: 'libra serif modern';
+  font-family: 'Rosario', Arial, sans-serif;
   background-color: var(--cream);
   color: var(--dark);
   line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Libra Serif Modern', serif;
+}
+
+p {
+  font-family: 'Rosario', Arial, sans-serif;
 }
 
 /* Header & Navigation */
