@@ -5,15 +5,15 @@
 }
 
 :root {
-  --burgundy: #800020;
-  --gold: #f1ca49;
-  --cream: #f5f5dc;
-  --dark: #1a0a0a;
+  --burgundy: #620405;
+  --gold: #daa520;
+  --cream: #f6f6f6;
+  --dark: #282120;
   --shadow: rgba(0, 0, 0, 0.3);
 }
 
 body {
-  font-family: 'Georgia', serif;
+  font-family: 'libra serif modern', serif;
   background-color: var(--cream);
   color: var(--dark);
   line-height: 1.6;
