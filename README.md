@@ -181,11 +181,6 @@ Railway tilbyder:
 - [Railway Status](https://status.railway.app/)
 
 ## 🔑 Login Credentials
-
-### Admin Bruger
-- **Brugernavn:** `admin`
-- **Adgangskode:** `admin123`
-
 ### Test Bruger
 - **Brugernavn:** `drumm`
 - **Adgangskode:** `drumm123`
